@@ -21,3 +21,9 @@ Based on https://github.com/elysiajs/elysia/issues/125#issuecomment-1716994577
 ## Shoelace
 
 In order to use shoelace components and not have tsx cause type errors, add any of the needed elements to `shoelace.d.ts`
+
+## DB
+
+Using Turso + Drizzle as the orm
+
+Applying changes: https://orm.drizzle.team/docs/get-started/turso-existing#step-9---applying-changes-to-the-database-optional

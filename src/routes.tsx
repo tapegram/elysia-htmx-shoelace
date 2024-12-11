@@ -1,5 +1,6 @@
 import { html, Html } from "@elysiajs/html";
 import Elysia from "elysia";
+import { turso } from "./db/connection";
 
 export default function addRoutes(app: Elysia) {
   app.get('/', () =>
@@ -8,7 +9,12 @@ export default function addRoutes(app: Elysia) {
       <sl-button class="m-2" onclick="alert('hello')"> Click me </sl-button>
     </Page>
   );
+  app.get("/items", async () => {
+    const { rows } = await turso.execute("SELECT * FROM items");
+    return rows;
+  });
 }
+
 
 const Page = ({ children }: { children: JSX.Element[] }) =>
   <html lang='en' >
