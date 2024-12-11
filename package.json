@@ -4,7 +4,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development bun run --hot src/index.ts",
-    "drizzle-pull": "npx drizzle-kit pull"
+    "drizzle-pull": "npx drizzle-kit pull",
+    "drizzle-push": "npx drizzle-kit push",
+    "drizzle-generate": "npx drizzle-kit generate",
+    "drizzle-migrate": "npx drizzle-kit migrate"
   },
   "dependencies": {
     "@elysiajs/html": "^1.1.1",
