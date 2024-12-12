@@ -6,18 +6,13 @@ import { Elysia, ListenCallback } from "elysia";
 import { ElysiaWS } from "elysia/dist/ws";
 import addRoutes from "./routes";
 import { htmx } from "@gtramontina.com/elysia-htmx";
+import { getEnv } from "./shared";
+import { ElysiaLogging } from "@otherguy/elysia-logging";
+import { logger } from "@grotto/logysia";
 
 declare global {
   var ws: ElysiaWS<any, any, any>
   var isOpened: boolean
-}
-
-export type Environment = 'development' | 'production';
-export const getEnv = (): Environment => {
-  if (process.env.NODE_ENV === 'development') {
-    return "development"
-  }
-  return "production"
 }
 
 export default function main() {
@@ -37,6 +32,7 @@ export default function main() {
 
 function applyPlugins(app: Elysia) {
   app.use(html())
+  app.use(logger())
   app.use(staticPlugin())
   app.use(htmx())
   app.use(tailwind({                           // 2. Use

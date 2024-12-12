@@ -13,6 +13,7 @@
   "dependencies": {
     "@elysiajs/html": "^1.1.1",
     "@elysiajs/static": "^1.1.1",
+    "@grotto/logysia": "^0.1.6",
     "@gtramontina.com/elysia-htmx": "2.0.0",
     "@gtramontina.com/elysia-tailwind": "2.0.0",
     "@libsql/client": "^0.14.0",

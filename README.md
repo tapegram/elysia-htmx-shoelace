@@ -1,6 +1,7 @@
 # Bun, Elysia, (Turso?), Htmx (ft Hyperscript)
 
 Rolling my own BETH stack from scratch to learn and to make a starter.
+Heavily referencing: https://www.youtube.com/watch?v=cpzowDDJj24&t=742s
 
 ## Technologies
 
