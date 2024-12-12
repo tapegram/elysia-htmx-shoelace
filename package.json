@@ -3,7 +3,8 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development turso dev --db-file local.sqlite & bun run --hot src/index.ts",
+    "turso-dev": "turso dev --db-file local.sqlite",
+    "dev": "NODE_ENV=development bun run --hot src/index.ts",
     "drizzle-pull": "bunx drizzle-kit pull",
     "drizzle-push": "bunx drizzle-kit push",
     "drizzle-generate": "bunx drizzle-kit generate",
