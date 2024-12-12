@@ -27,3 +27,7 @@ In order to use shoelace components and not have tsx cause type errors, add any 
 Using Turso + Drizzle as the orm
 
 Applying changes: https://orm.drizzle.team/docs/get-started/turso-existing#step-9---applying-changes-to-the-database-optional
+
+## Scripting with hyperscript
+
+https://hyperscript.org/img/hyperscript-cheatsheet.pdf

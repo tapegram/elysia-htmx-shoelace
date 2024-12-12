@@ -11,6 +11,7 @@ export default function addRoutes(app: Elysia) {
       <h1> Hello World </h1>
       <sl-button class="m-4" variant="danger" onclick="alert('hello')"> Click me </sl-button>
       <sl-input></sl-input>
+      <button _="on click toggle .bg-red-500">Toggle background color with hyperscript</button>
     </Page>
   );
   app.get("/items", async () => {
