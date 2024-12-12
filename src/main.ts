@@ -11,13 +11,21 @@ declare global {
   var isOpened: boolean
 }
 
+export type Environment = 'development' | 'production';
+export const getEnv = (): Environment => {
+  if (process.env.NODE_ENV === 'development') {
+    return "development"
+  }
+  return "production"
+}
+
 export default function main() {
   const app = new Elysia()
 
   applyPlugins(app)
   addRoutes(app)
 
-  if (process.env.NODE_ENV === 'development') {
+  if (getEnv() === "development") {
     // This will call app.listen
     enableLiveReload(app)
   } else {
