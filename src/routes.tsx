@@ -1,17 +1,19 @@
 import { html, Html } from "@elysiajs/html";
 import Elysia from "elysia";
-import { turso } from "./db/connection";
+import db from "./db/connection";
+import { usersTable } from "./db/schema";
 
 export default function addRoutes(app: Elysia) {
   app.get('/', () =>
     <Page>
       <h1> Hello World </h1>
-      <sl-button class="m-2" onclick="alert('hello')"> Click me </sl-button>
+      <sl-button class="m-4" variant="danger" onclick="alert('hello')"> Click me </sl-button>
+      <sl-input></sl-input>
     </Page>
   );
   app.get("/items", async () => {
-    const { rows } = await turso.execute("SELECT * FROM items");
-    return rows;
+    const data = await db.select().from(usersTable);
+    return data;
   });
 }
 
