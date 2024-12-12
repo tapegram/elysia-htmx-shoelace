@@ -12,6 +12,7 @@
   "dependencies": {
     "@elysiajs/html": "^1.1.1",
     "@elysiajs/static": "^1.1.1",
+    "@gtramontina.com/elysia-htmx": "2.0.0",
     "@gtramontina.com/elysia-tailwind": "2.0.0",
     "@libsql/client": "^0.14.0",
     "@paralleldrive/cuid2": "^2.2.2",

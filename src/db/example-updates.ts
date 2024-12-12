@@ -1,7 +1,7 @@
 import 'dotenv/config';
-import { eq } from 'drizzle-orm';
-import { drizzle } from 'drizzle-orm/libsql';
-import { usersTable } from './schema';
+// import { eq } from 'drizzle-orm';
+// import { drizzle } from 'drizzle-orm/libsql';
+// import { usersTable } from './schema';
 
 
 // async function main() {

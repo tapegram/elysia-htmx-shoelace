@@ -1,10 +1,11 @@
-import { html, Html } from "@elysiajs/html";
+import { html, } from "@elysiajs/html";
 import open from "open";
 import staticPlugin from "@elysiajs/static";
 import { tailwind } from "@gtramontina.com/elysia-tailwind";
 import { Elysia, ListenCallback } from "elysia";
 import { ElysiaWS } from "elysia/dist/ws";
 import addRoutes from "./routes";
+import { htmx } from "@gtramontina.com/elysia-htmx";
 
 declare global {
   var ws: ElysiaWS<any, any, any>
@@ -37,6 +38,7 @@ export default function main() {
 function applyPlugins(app: Elysia) {
   app.use(html())
   app.use(staticPlugin())
+  app.use(htmx())
   app.use(tailwind({                           // 2. Use
     path: "/public/css/style.css",       // 2.1 Where to serve the compiled stylesheet;
     source: "./src/style.css",        // 2.2 Specify source file path (where your @tailwind directives are);
