@@ -1,6 +1,13 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 .env 
+
+# local dev
+local.db
+local.sqlite
+local.sqlite-shm
+local.sqlite-wal
+
 # dependencies
 /node_modules
 /.pnp

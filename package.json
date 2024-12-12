@@ -3,11 +3,12 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development bun run --hot src/index.ts",
-    "drizzle-pull": "npx drizzle-kit pull",
-    "drizzle-push": "npx drizzle-kit push",
-    "drizzle-generate": "npx drizzle-kit generate",
-    "drizzle-migrate": "npx drizzle-kit migrate"
+    "dev": "NODE_ENV=development turso dev --db-file local.sqlite & bun run --hot src/index.ts",
+    "drizzle-pull": "bunx drizzle-kit pull",
+    "drizzle-push": "bunx drizzle-kit push",
+    "drizzle-generate": "bunx drizzle-kit generate",
+    "drizzle-migrate": "bunx drizzle-kit migrate",
+    "drizzle-studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
     "@elysiajs/html": "^1.1.1",
