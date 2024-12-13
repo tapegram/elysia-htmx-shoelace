@@ -45,7 +45,7 @@ const TaskList = ({ tasks }: { tasks: Task[] }): JSX.Element => {
             class="w-4/5"
             summary={task.title}
           >
-            <sl-textarea class="text-gray-700 mb-2" resize="auto" defaultValue={task.description}></sl-textarea>
+            <sl-textarea _="on keyup halt the event" class="text-gray-700 mb-2" resize="auto" defaultValue={task.description}></sl-textarea>
             <div class="flex gap-2 justify-end mt-4">
               <sl-button tabindex={-1} variant="default" onclick="alert('delete')">
                 <sl-icon name="trash"></sl-icon>
