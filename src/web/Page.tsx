@@ -16,16 +16,16 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
     <body class="p-8">
       <nav class="navbar bg-gray-800 p-4">
         <div class="container mx-auto flex justify-between items-center">
-          <a href="/" class="navbar-brand text-white text-xl">the board</a>
+          <a tabindex={-1} href="/" class="navbar-brand text-white text-xl">the board</a>
           <ul class="navbar-nav flex space-x-4">
             <li class="nav-item">
-              <a href="/" class="nav-link text-white">home</a>
+              <a tabindex={-1} href="/" class="nav-link text-white">home</a>
             </li>
             <li class="nav-item">
-              <a href="/about" class="nav-link text-white">about</a>
+              <a tabindex={-1} href="/about" class="nav-link text-white">about</a>
             </li>
             <li class="nav-item">
-              <a href="/contact" class="nav-link text-white">contact</a>
+              <a tabindex={-1} href="/contact" class="nav-link text-white">contact</a>
             </li>
           </ul>
         </div>
