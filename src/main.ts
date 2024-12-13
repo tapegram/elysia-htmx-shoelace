@@ -7,7 +7,6 @@ import { ElysiaWS } from "elysia/dist/ws";
 import addRoutes from "./routes";
 import { htmx } from "@gtramontina.com/elysia-htmx";
 import { getEnv } from "./shared";
-import { ElysiaLogging } from "@otherguy/elysia-logging";
 import { logger } from "@grotto/logysia";
 
 declare global {

@@ -13,7 +13,7 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
       </script>}
       <script src="https://unpkg.com/hyperscript.org@0.9.13"></script>
     </head>
-    <body>
+    <body class="p-8">
       {children}
     </body>
   </html>)
