@@ -6,6 +6,7 @@ declare module JSX {
     'sl-card': any;
     'sl-icon': any;
     'sl-animation': any;
+    'sl-textarea': any;
     // Add more Shoelace components as needed
   }
 }
