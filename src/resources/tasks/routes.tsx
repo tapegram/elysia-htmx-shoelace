@@ -33,8 +33,9 @@ const TaskList = ({ tasks }: { tasks: Task[] }): JSX.Element => {
             _={`
                 on focus 
                   remove @open from <sl-details /> in closest <div />
-                  add @play to the closest <sl-animation />
                   then wait 5ms
+                  add @play to the closest <sl-animation />
+                  then wait 100ms
                   then add @open to me
                 end
                 on keyup if the event's key is 'x' call alert('delete') end
