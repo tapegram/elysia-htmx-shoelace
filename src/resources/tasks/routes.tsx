@@ -30,13 +30,18 @@ const TaskList = ({ tasks }: { tasks: Task[] }): JSX.Element => {
       {tasks.map((task, index) => (
         <sl-animation name="pulse" duration="500" iterations="1" easing="easeOutCubic">
           <sl-details
-            _="on focus add @play to the closest <sl-animation />
-                then remove @open from <sl-details/> in the closest <div/>
-                then add @open to the closest <sl-details />
-               end
-               on keyup if the event's key is 'x' call alert('delete') end
-               on keyup if the event's key is 't' call alert('tomorrow') end
-               on keyup if the event's key is 'e' call alert('completed')"
+            _={`on mousedown
+                  halt the event
+                end
+                on focus 
+                  halt the event
+                  add @play to the closest <sl-animation />
+                  then remove @open from <sl-details /> in the closest <div />
+                  then add @open to me
+                end
+                on keyup if the event's key is 'x' call alert('delete') end
+                on keyup if the event's key is 't' call alert('tomorrow') end
+                on keyup if the event's key is 'e' call alert('completed')`}
             id={`task-${index}`}
             class="w-4/5"
             summary={task.title}
