@@ -16,9 +16,7 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
     <body
       _="
           on keyup if the event's key is 'c' 
-            then log #task-form
-            then add @play to #task-form 
-            then toggle .hidden on #task-form end
+          then call #new-task-dialog.show() 
       "
       class="p-8">
       <nav class="navbar bg-gray-800 p-4">
@@ -26,13 +24,7 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
           <a tabindex={-1} href="/" class="navbar-brand text-white text-xl">the board</a>
           <ul class="navbar-nav flex space-x-4">
             <li class="nav-item">
-              <a tabindex={-1} href="/" class="nav-link text-white">home</a>
-            </li>
-            <li class="nav-item">
-              <a tabindex={-1} href="/about" class="nav-link text-white">about</a>
-            </li>
-            <li class="nav-item">
-              <a tabindex={-1} href="/contact" class="nav-link text-white">contact</a>
+              <sl-icon-button name="pencil" label="Create new task" class="nav-link text-white" _="on click call #new-task-dialog.show()"></sl-icon-button>
             </li>
           </ul>
         </div>

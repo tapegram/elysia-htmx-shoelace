@@ -21,9 +21,9 @@ export function addTasksRoutes(app: Elysia) {
       partial={context.hx.request}
     >
       <span
-        class="w-100%"
+        class="w-full"
       >
-        <TaskForm />
+        <NewTaskDialog />
         <TaskList tasks={tasks} />
       </span>
     </Page>
@@ -32,23 +32,29 @@ export function addTasksRoutes(app: Elysia) {
 
 type Task = { id: number, title: string, completed: boolean, description?: string };
 
-
-const TaskForm = (): JSX.Element => {
+const NewTaskDialog = (): JSX.Element => {
   return (
-    <div class="flex flex-col gap-4 items-center">
-      <sl-animation
-        id="task-form" class="hidden" name="zoomIn" duration="500" iterations="1" easing="easeOutCubic">
-        <sl-card class="w-4/5 p-4">
-          <form class="flex flex-col gap-4 items-center">
-            <sl-input name="title" label="Task Title" required></sl-input>
-            <sl-textarea name="description" label="Task Description" resize="auto"></sl-textarea>
-            <sl-button type="submit" variant="primary">Add Task</sl-button>
-          </form>
-        </sl-card>
-      </sl-animation>
-    </div>
-  );
-};
+    <sl-dialog id="new-task-dialog" label="new task" class="">
+      <div class="flex flex-col gap-4 items-center h-full w-full">
+        <form class="flex flex-col gap-4 items-center w-100% h-full w-full">
+          <sl-input autofocus label="summary" name="summary" placeholder="Go to the store" class="flex-grow w-full" />
+          <sl-textarea
+            label="description"
+            name="description"
+            placeholder="Buy some milk, eggs, and bread."
+            resize="none"
+            size="small"
+            class="w-full" />
+        </form>
+      </div>
+      <sl-button
+        _="on click call #new-task-dialog.hide()"
+        slot="footer" variant="default">nevermind</sl-button>
+      <sl-button type="submit" slot="footer" variant="primary">add</sl-button>
+    </sl-dialog>
+  )
+}
+
 
 const TaskList = ({ tasks }: { tasks: Task[] }): JSX.Element => {
   return (
