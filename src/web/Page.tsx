@@ -8,7 +8,7 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.0/cdn/themes/light.css" />
       <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.0/cdn/shoelace-autoloader.js"></script>
       <link rel="stylesheet" href="/public/css/style.css" />
-      <script type="module" src="/public/js/htmx.min.js" ></script>
+      <script src="https://unpkg.com/htmx.org@2.0.4"></script>
       {env === "development" && <script type="text/javascript" src="/public/js/livereload.js">
       </script>}
       <script src="https://unpkg.com/hyperscript.org@0.9.13"></script>

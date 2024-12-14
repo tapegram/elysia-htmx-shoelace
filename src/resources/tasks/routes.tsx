@@ -1,6 +1,6 @@
 import { Html, } from "@elysiajs/html";
 import { HtmxContext } from "@gtramontina.com/elysia-htmx";
-import Elysia, { redirect } from "elysia";
+import Elysia, { redirect, t } from "elysia";
 import { getEnv } from "../../shared";
 import { Page } from "../../web/Page";
 
@@ -18,7 +18,14 @@ export function addTasksRoutes(app: Elysia) {
     }
 
     return <TaskItem task={newTask} />
-  });
+  },
+    {
+      body: t.Object({
+        summary: t.String(),
+        description: t.String()
+      }),
+    }
+  );
 
   app.get("/tasks", (context: HtmxContext) => {
     const tasks = [
