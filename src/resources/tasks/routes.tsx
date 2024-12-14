@@ -43,6 +43,7 @@ const NewTaskDialog = (): JSX.Element => {
           <sl-input
             autofocus
             required
+            size="small"
             label="summary"
             name="summary"
             placeholder="Go to the store"
@@ -55,12 +56,17 @@ const NewTaskDialog = (): JSX.Element => {
             resize="none"
             size="small"
             class="w-full" />
+
+          <sl-button
+            id="new-task-dialog-submit-button"
+            type="submit"
+            slot="footer"
+            variant="primary"
+            class="ml-auto w-20">
+            add
+          </sl-button>
         </form>
       </div>
-      <sl-button
-        id="new-task-dialog-submit-button"
-        _="on click call #new-task-dialog.hide()"
-        type="submit" slot="footer" variant="primary">add</sl-button>
     </sl-dialog>
   )
 }
