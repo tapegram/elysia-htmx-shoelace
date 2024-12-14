@@ -24,7 +24,7 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
           <a tabindex={-1} href="/" class="navbar-brand text-white text-xl">the board</a>
           <ul class="navbar-nav flex space-x-4">
             <li class="nav-item">
-              <sl-icon-button name="pencil" label="Create new task" class="nav-link text-white" _="on click call #new-task-dialog.show()"></sl-icon-button>
+              <sl-icon-button tabindex={-1} name="pencil" label="Create new task" class="nav-link text-white" _="on click call #new-task-dialog.show()"></sl-icon-button>
             </li>
           </ul>
         </div>
