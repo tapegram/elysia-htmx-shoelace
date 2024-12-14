@@ -34,11 +34,21 @@ type Task = { id: number, title: string, completed: boolean, description?: strin
 
 const NewTaskDialog = (): JSX.Element => {
   return (
-    <sl-dialog id="new-task-dialog" label="new task" class="">
+    <sl-dialog
+      id="new-task-dialog"
+      label="new task"
+    >
       <div class="flex flex-col gap-4 items-center h-full w-full">
-        <form class="flex flex-col gap-4 items-center w-100% h-full w-full">
-          <sl-input autofocus label="summary" name="summary" placeholder="Go to the store" class="flex-grow w-full" />
+        <form hx-post="/tasks" class="flex flex-col gap-4 items-center w-100% h-full w-full">
+          <sl-input
+            autofocus
+            required
+            label="summary"
+            name="summary"
+            placeholder="Go to the store"
+            class="flex-grow w-full" />
           <sl-textarea
+            required
             label="description"
             name="description"
             placeholder="Buy some milk, eggs, and bread."
@@ -48,9 +58,9 @@ const NewTaskDialog = (): JSX.Element => {
         </form>
       </div>
       <sl-button
+        id="new-task-dialog-submit-button"
         _="on click call #new-task-dialog.hide()"
-        slot="footer" variant="default">nevermind</sl-button>
-      <sl-button type="submit" slot="footer" variant="primary">add</sl-button>
+        type="submit" slot="footer" variant="primary">add</sl-button>
     </sl-dialog>
   )
 }
