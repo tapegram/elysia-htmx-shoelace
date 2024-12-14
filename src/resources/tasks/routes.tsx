@@ -16,13 +16,39 @@ export function addTasksRoutes(app: Elysia) {
       { id: 3, title: 'Task 3', completed: false },
     ];
 
-    return <Page env={getEnv()} partial={context.hx.request} >
-      <TaskList tasks={tasks} />
+    return <Page
+      env={getEnv()}
+      partial={context.hx.request}
+    >
+      <span
+        class="w-100%"
+      >
+        <TaskForm />
+        <TaskList tasks={tasks} />
+      </span>
     </Page>
   })
 }
 
 type Task = { id: number, title: string, completed: boolean, description?: string };
+
+
+const TaskForm = (): JSX.Element => {
+  return (
+    <div class="flex flex-col gap-4 items-center">
+      <sl-animation
+        id="task-form" class="hidden" name="zoomIn" duration="500" iterations="1" easing="easeOutCubic">
+        <sl-card class="w-4/5 p-4">
+          <form class="flex flex-col gap-4 items-center">
+            <sl-input name="title" label="Task Title" required></sl-input>
+            <sl-textarea name="description" label="Task Description" resize="auto"></sl-textarea>
+            <sl-button type="submit" variant="primary">Add Task</sl-button>
+          </form>
+        </sl-card>
+      </sl-animation>
+    </div>
+  );
+};
 
 const TaskList = ({ tasks }: { tasks: Task[] }): JSX.Element => {
   return (

@@ -13,7 +13,14 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
       </script>}
       <script src="https://unpkg.com/hyperscript.org@0.9.13"></script>
     </head>
-    <body class="p-8">
+    <body
+      _="
+          on keyup if the event's key is 'c' 
+            then log #task-form
+            then add @play to #task-form 
+            then toggle .hidden on #task-form end
+      "
+      class="p-8">
       <nav class="navbar bg-gray-800 p-4">
         <div class="container mx-auto flex justify-between items-center">
           <a tabindex={-1} href="/" class="navbar-brand text-white text-xl">the board</a>
