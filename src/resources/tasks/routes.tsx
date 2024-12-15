@@ -11,8 +11,20 @@ export function addTasksRoutes(app: Elysia) {
   })
 
   app.post("/tasks/:id/complete", async ({ params: { id } }) => {
-    const newTask = await tasksService.complete(parseInt(id))
+    await tasksService.complete(parseInt(id))
     // On complete, remove from the list, so return nothing
+    return ""
+  });
+
+  app.delete("/tasks/:id", async ({ params: { id } }) => {
+    await tasksService.delete(parseInt(id))
+    // On delete, remove from the list, so return nothing
+    return ""
+  });
+
+  app.post("/tasks/:id/defer", async ({ params: { id } }) => {
+    await tasksService.defer(parseInt(id), 1)
+    // On defer, remove for now, bring it back on the right date
     return ""
   });
 
@@ -127,12 +139,27 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
       <sl-textarea _="on keyup halt the event" class="text-gray-700 mb-2" resize="auto" value={task.description} />
       <div class="flex gap-2 justify-end mt-4">
         <sl-tooltip content="delete (x)">
-          <sl-button tabindex={-1} id={`task-${task.id}-delete`} variant="default" onclick="alert('delete')">
+          <sl-button
+            tabindex={-1}
+            id={`task-${task.id}-delete`}
+            hx-delete={`/tasks/${task.id}`}
+            hx-target={`#task-${task.id}`}
+            hx-swap="outerHTML"
+            hx-confirm="Are you sure you want to delete this task?"
+            variant="default"
+          >
             <sl-icon name="trash"></sl-icon>
           </sl-button>
         </sl-tooltip>
         <sl-tooltip content="do tomorrow (t)">
-          <sl-button tabindex={-1} id={`task-${task.id}-defer`} variant="default" onclick="alert('tomorrow')">
+          <sl-button
+            tabindex={-1}
+            id={`task-${task.id}-defer`}
+            variant="default"
+            hx-post={`/tasks/${task.id}/defer`}
+            hx-target={`#task-${task.id}`}
+            hx-swap="outerHTML"
+          >
             <sl-icon name="clock"></sl-icon>
           </sl-button>
         </sl-tooltip>

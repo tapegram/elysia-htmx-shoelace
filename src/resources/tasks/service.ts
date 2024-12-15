@@ -52,9 +52,8 @@ class TasksServiceImpl implements TasksService {
   }
 
   async defer(taskId: TaskId, days: number): Promise<Task> {
-    const [task] = await this.db.select().from(tasksTable).where(eq(tasksTable.id, taskId)).limit(1);
-    const newDueDate = new Date(task.dueDate);
-    newDueDate.setDate(newDueDate.getDate() + days);
+    const newDueDate = new Date();;
+    newDueDate.setDate(newDueDate.getDay() + days);
     const [deferredTask] = await this.db.update(tasksTable).set({ dueDate: newDueDate.toISOString().split('T')[0] }).where(eq(tasksTable.id, taskId)).returning().all();
     return deferredTask;
   }
