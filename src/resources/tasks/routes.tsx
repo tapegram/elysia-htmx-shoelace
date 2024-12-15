@@ -10,6 +10,12 @@ export function addTasksRoutes(app: Elysia) {
     return redirect("/tasks")
   })
 
+  app.post("/tasks/:id/complete", async ({ params: { id } }) => {
+    const newTask = await tasksService.complete(parseInt(id))
+    // On complete, remove from the list, so return nothing
+    return ""
+  });
+
   app.post("/tasks", async ({ body }) => {
     const newTask = await tasksService.create({
       summary: body.summary,
@@ -25,6 +31,7 @@ export function addTasksRoutes(app: Elysia) {
       }),
     }
   );
+
 
   app.get("/tasks", async (context: HtmxContext) => {
     const tasks = await tasksService.getTodaysTasks();
@@ -130,7 +137,14 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
           </sl-button>
         </sl-tooltip>
         <sl-tooltip content="done! (e)">
-          <sl-button tabindex={-1} id={`task-${task.id}-complete`} variant="default" onclick="alert('completed')">
+          <sl-button
+            tabindex={-1}
+            id={`task-${task.id}-complete`}
+            hx-post={`/tasks/${task.id}/complete`}
+            hx-target={`#task-${task.id}`}
+            hx-swap="outerHTML"
+            variant="default"
+          >
             <sl-icon name="check2"></sl-icon>
           </sl-button>
         </sl-tooltip>
