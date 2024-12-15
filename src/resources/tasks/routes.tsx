@@ -11,13 +11,14 @@ export function addTasksRoutes(app: Elysia) {
     return redirect("/tasks")
   })
 
-  app.post("/tasks", ({ body }) => {
-    const newTask = {
-      id: 4,
+  app.post("/tasks", async ({ body }) => {
+    const newTasks: Task[] = await db.insert(tasksTable).values({
       summary: body.summary,
       completed: false,
       description: body.description,
-    }
+    }).returning()
+
+    const newTask = newTasks[0]
 
     return <TaskItem task={newTask} />
   },
