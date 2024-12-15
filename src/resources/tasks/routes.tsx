@@ -3,6 +3,8 @@ import { HtmxContext } from "@gtramontina.com/elysia-htmx";
 import Elysia, { redirect, t } from "elysia";
 import { getEnv } from "../../shared";
 import { Page } from "../../web/Page";
+import db from "../../db/connection";
+import { tasksTable } from "../../db/schema";
 
 export function addTasksRoutes(app: Elysia) {
   app.get('/', () => {
@@ -12,7 +14,7 @@ export function addTasksRoutes(app: Elysia) {
   app.post("/tasks", ({ body }) => {
     const newTask = {
       id: 4,
-      title: body.summary,
+      summary: body.summary,
       completed: false,
       description: body.description,
     }
@@ -27,12 +29,8 @@ export function addTasksRoutes(app: Elysia) {
     }
   );
 
-  app.get("/tasks", (context: HtmxContext) => {
-    const tasks = [
-      { id: 1, title: 'Task 1', completed: false, description: 'This is a description for Task 1' },
-      { id: 2, title: 'Task 2', completed: true },
-      { id: 3, title: 'Task 3', completed: false },
-    ];
+  app.get("/tasks", async (context: HtmxContext) => {
+    const tasks = await db.select().from(tasksTable);
 
     return <Page
       env={getEnv()}
@@ -48,7 +46,7 @@ export function addTasksRoutes(app: Elysia) {
   })
 }
 
-type Task = { id: number, title: string, completed: boolean, description?: string };
+type Task = typeof tasksTable.$inferSelect
 
 const NewTaskDialog = (): JSX.Element => {
   return (
@@ -122,7 +120,7 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
             `}
       id={`task-${task.id}`}
       class="w-4/5"
-      summary={task.title}
+      summary={task.summary}
     >
       <sl-textarea _="on keyup halt the event" class="text-gray-700 mb-2" resize="auto" value={task.description} />
       <div class="flex gap-2 justify-end mt-4">
