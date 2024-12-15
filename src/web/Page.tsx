@@ -16,7 +16,40 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
     <body
       _="
           on keyup if the event's key is 'c' 
-          then call #new-task-dialog.show() 
+            then call #new-task-dialog.show() 
+          end
+      
+          on keydown from the window if the event's key is 'ArrowDown'
+            then halt the event
+          end
+          on keydown from the window if the event's key is 'ArrowUp'
+            then halt the event
+          end
+      
+          on keyup if the event's key is 'ArrowDown'
+            then set currentItem to the first <sl-card.task-card--selected/>
+            then if currentItem is null 
+              then set nextItem to the first <sl-card/>
+              else set nextItem to next <sl-card/> from currentItem with wrapping
+            end
+            then remove .task-card--selected from <sl-card/>
+            then add .task-card--selected to nextItem
+            then go to nextItem -500px smoothly
+            then add @play to nextItem.parentElement
+            then halt the event
+          end
+      
+          on keyup if the event's key is 'ArrowUp'
+            then set currentItem to the first <sl-card.task-card--selected/>
+            then if currentItem is null 
+              then set nextItem to the last <sl-card/>
+              else set nextItem to previous <sl-card/> from currentItem with wrapping
+            end
+            then remove .task-card--selected from <sl-card/>
+            then add .task-card--selected to nextItem
+            then go to nextItem -500px smoothly
+            then add @play to nextItem.parentElement
+          end
       "
       class="p-8">
       <nav class="navbar bg-gray-800 p-4">

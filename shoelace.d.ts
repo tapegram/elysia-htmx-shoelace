@@ -10,6 +10,7 @@ declare module JSX {
     'sl-dialog': any;
     'sl-icon-button': any;
     'sl-tooltip': any;
+    'sl-button-group': any;
     // Add more Shoelace components as needed
   }
 }

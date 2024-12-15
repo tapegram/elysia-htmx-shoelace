@@ -6,6 +6,13 @@
   visibility: hidden;
 }
 
+.task-card--selected {
+  background-color: var(--sl-color-primary-100);
+  border: 2px solid var(--sl-color-primary-500);
+  box-shadow: 0 0 10px var(--sl-color-shadow);
+  border-radius: 7px;
+}
+
 :root,
 :host,
 .sl-theme-light {
