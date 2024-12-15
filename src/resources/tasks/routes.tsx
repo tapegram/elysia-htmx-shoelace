@@ -57,7 +57,14 @@ const NewTaskDialog = (): JSX.Element => {
       label="new task"
     >
       <div class="flex flex-col gap-4 items-center h-full w-full">
-        <form hx-post="/tasks" class="flex flex-col gap-4 items-center w-100% h-full w-full">
+        <form
+          hx-post="/tasks"
+          hx-target="#tasks-list"
+          hx-swap="afterbegin"
+          _="on htmx:afterRequest
+               if (event.detail.successful) then remove @open from #new-task-dialog"
+          class="flex flex-col gap-4 items-center w-100% h-full w-full"
+        >
           <sl-input
             autofocus
             required
@@ -92,7 +99,7 @@ const NewTaskDialog = (): JSX.Element => {
 
 const TaskList = ({ tasks }: { tasks: Task[] }): JSX.Element => {
   return (
-    <div class="flex flex-col gap-4 items-center">
+    <div id="tasks-list" class="flex flex-col gap-4 items-center">
       {tasks.map((task) => (
         TaskItem({ task })
       ))
