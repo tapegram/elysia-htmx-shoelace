@@ -8,4 +8,6 @@ const db = drizzle({
   },
 });
 
+export type TursoDB = typeof db;
+
 export default db;

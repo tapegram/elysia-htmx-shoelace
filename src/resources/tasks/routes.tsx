@@ -3,8 +3,7 @@ import { HtmxContext } from "@gtramontina.com/elysia-htmx";
 import Elysia, { redirect, t } from "elysia";
 import { getEnv } from "../../shared";
 import { Page } from "../../web/Page";
-import db from "../../db/connection";
-import { tasksTable } from "../../db/schema";
+import { Task, tasksService } from "./service";
 
 export function addTasksRoutes(app: Elysia) {
   app.get('/', () => {
@@ -12,13 +11,10 @@ export function addTasksRoutes(app: Elysia) {
   })
 
   app.post("/tasks", async ({ body }) => {
-    const newTasks: Task[] = await db.insert(tasksTable).values({
+    const newTask = await tasksService.create({
       summary: body.summary,
-      completed: false,
       description: body.description,
-    }).returning()
-
-    const newTask = newTasks[0]
+    })
 
     return <TaskItem task={newTask} />
   },
@@ -31,7 +27,7 @@ export function addTasksRoutes(app: Elysia) {
   );
 
   app.get("/tasks", async (context: HtmxContext) => {
-    const tasks = await db.select().from(tasksTable);
+    const tasks = await tasksService.getTodaysTasks();
 
     return <Page
       env={getEnv()}
@@ -46,8 +42,6 @@ export function addTasksRoutes(app: Elysia) {
     </Page>
   })
 }
-
-type Task = typeof tasksTable.$inferSelect
 
 const NewTaskDialog = (): JSX.Element => {
   return (
