@@ -60,6 +60,7 @@ function enableLiveReload(app: Elysia) {
     }
 
     if (globalThis.ws) {
+      console.log("Reloading...")
       globalThis.ws.send('live-reload')
     }
 
