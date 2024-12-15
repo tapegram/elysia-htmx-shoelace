@@ -74,10 +74,14 @@ const NewTaskDialog = (): JSX.Element => {
           hx-target="#tasks-list"
           hx-swap="afterbegin"
           _="on htmx:afterRequest
-               if (event.detail.successful) then remove @open from #new-task-dialog"
+               if (event.detail.successful) 
+                then remove @open from #new-task-dialog
+                then call me.reset()
+              end"
           class="flex flex-col gap-4 items-center w-100% h-full w-full"
         >
           <sl-input
+            id="new-task-dialog-summary-input"
             autofocus
             required
             size="small"
@@ -86,7 +90,7 @@ const NewTaskDialog = (): JSX.Element => {
             placeholder="Go to the store"
             class="flex-grow w-full" />
           <sl-textarea
-            required
+            is="new-task-dialog-description-textarea"
             label="description"
             name="description"
             placeholder="Buy some milk, eggs, and bread."
