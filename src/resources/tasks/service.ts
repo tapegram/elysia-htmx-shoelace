@@ -1,5 +1,5 @@
 import { tasksTable } from "../../db/schema";
-import { eq, lte, and } from 'drizzle-orm/expressions';
+import { eq, lte, and, lt } from 'drizzle-orm/expressions';
 
 import db, { TursoDB } from "../../db/connection";
 export type Task = typeof tasksTable.$inferSelect
@@ -52,8 +52,8 @@ class TasksServiceImpl implements TasksService {
   }
 
   async defer(taskId: TaskId, days: number): Promise<Task> {
-    const newDueDate = new Date();;
-    newDueDate.setDate(newDueDate.getDay() + days);
+    const newDueDate = new Date();
+    newDueDate.setDate(newDueDate.getDate() + days);
     const [deferredTask] = await this.db.update(tasksTable).set({ dueDate: newDueDate.toISOString().split('T')[0] }).where(eq(tasksTable.id, taskId)).returning().all();
     return deferredTask;
   }

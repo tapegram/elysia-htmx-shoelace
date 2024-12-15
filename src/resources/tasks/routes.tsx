@@ -111,7 +111,10 @@ const NewTaskDialog = (): JSX.Element => {
 
 const TaskList = ({ tasks }: { tasks: Task[] }): JSX.Element => {
   return (
-    <div id="tasks-list" class="flex flex-col gap-4 items-center">
+    <div
+      id="tasks-list"
+      class="flex flex-col gap-4 items-center"
+    >
       {tasks.map((task) => (
         TaskItem({ task })
       ))
