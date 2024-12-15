@@ -151,6 +151,7 @@ const TaskItem = ({ task, index }: { task: Task, index: number }): JSX.Element =
             <sl-button
               tabindex={-1}
               id={`task-${task.id}-delete`}
+              data-task-delete-button
               hx-delete={`/tasks/${task.id}`}
               hx-target={`#task-${task.id}`}
               hx-swap="outerHTML"
@@ -163,6 +164,7 @@ const TaskItem = ({ task, index }: { task: Task, index: number }): JSX.Element =
           <sl-tooltip content="do tomorrow (t)">
             <sl-button
               tabindex={-1}
+              data-task-defer-button
               id={`task-${task.id}-defer`}
               variant="default"
               hx-post={`/tasks/${task.id}/defer`}
@@ -175,6 +177,7 @@ const TaskItem = ({ task, index }: { task: Task, index: number }): JSX.Element =
           <sl-tooltip content="done! (e)">
             <sl-button
               tabindex={-1}
+              data-task-complete-button
               id={`task-${task.id}-complete`}
               hx-post={`/tasks/${task.id}/complete`}
               hx-target={`#task-${task.id}`}
