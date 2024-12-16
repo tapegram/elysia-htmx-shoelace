@@ -122,15 +122,15 @@ const TaskList = ({ tasks }: { tasks: Task[] }): JSX.Element => {
       id="tasks-list"
     >
       {
-        tasks.map((task, index) =>
-          <li class="my-10"><TaskItem task={task} index={index} /></li>
+        tasks.map((task) =>
+          <li class="my-10"><TaskItem task={task} /></li>
         )
       }
     </ol>
   );
 }
 
-const TaskItem = ({ task, index }: { task: Task, index: number }): JSX.Element => {
+const TaskItem = ({ task }: { task: Task }): JSX.Element => {
 
   return <sl-animation name="pulse" duration="500" iterations="1" easing="easeOutCubic">
     <sl-card
@@ -141,7 +141,6 @@ const TaskItem = ({ task, index }: { task: Task, index: number }): JSX.Element =
             `}
       id={`task-${task.id}`}
       class="w-full"
-      autofocus={index === 0}
 
     >
       <div class="flex justify-between items-center w-full">
