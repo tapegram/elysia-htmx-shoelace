@@ -79,6 +79,18 @@ const NewTaskDialog = (): JSX.Element => {
                 then call me.reset()
               end
               on keyup if the event's key is 'Tab' halt the event end
+              on htmx:confirm
+                call my checkValidity()
+                if the result is false
+                  call my reportValidity()
+                  halt the event
+              end
+              on keydown[(ctrlKey or metaKey) and key == 'Enter']
+                call my checkValidity()
+                if the result is true
+                  trigger submit
+                otherwise
+                  call my reportValidity()
           "
           class="flex flex-col gap-4 items-center w-100% h-full w-full"
         >
