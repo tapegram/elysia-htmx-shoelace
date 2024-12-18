@@ -158,8 +158,17 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
               variant="default"
               _={`on htmx:afterRequest
                   if (event.detail.successful) 
+                    -- Animate the element being removed
                     then add @name=fadeOutLeft to closest <sl-animation />
                     then add @play to closest <sl-animation />
+
+                    -- Set focus on next element
+                    then set currentItem to me
+                    then set nextItem to next <sl-card/> from currentItem with wrapping
+                    then wait 300ms
+                    then add .task-card--selected to nextItem
+                    then go to nextItem -500px smoothly
+                    then add @play to nextItem.parentElement
                   end
                 `}
             >
@@ -177,8 +186,17 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
               hx-swap="outerHTML swap:500ms"
               _={`on htmx:afterRequest
                   if (event.detail.successful) 
+                    -- Animate the element being removed
                     then add @name=fadeOutLeft to closest <sl-animation />
                     then add @play to closest <sl-animation />
+
+                    -- Set focus on next element
+                    then set currentItem to me
+                    then set nextItem to next <sl-card/> from currentItem with wrapping
+                    then wait 300ms
+                    then add .task-card--selected to nextItem
+                    then go to nextItem -500px smoothly
+                    then add @play to nextItem.parentElement
                   end
                 `}
             >
@@ -196,8 +214,17 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
               hx-swap="outerHTML swap:500ms"
               _={`on htmx:afterRequest
                   if (event.detail.successful) 
+                    -- Animate the element being removed
                     then add @name=fadeOutLeft to closest <sl-animation />
                     then add @play to closest <sl-animation />
+
+                    -- Set focus on next element
+                    then set currentItem to me
+                    then set nextItem to next <sl-card/> from currentItem with wrapping
+                    then wait 300ms
+                    then add .task-card--selected to nextItem
+                    then go to nextItem -500px smoothly
+                    then add @play to nextItem.parentElement
                   end
                 `}
             >
