@@ -34,7 +34,7 @@ export function addTasksRoutes(app: Elysia) {
       description: body.description,
     })
 
-    return <TaskItem task={newTask} />
+    return <li class="my-10"><TaskItem task={newTask} /></li>
   },
     {
       body: t.Object({
@@ -153,9 +153,15 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
               data-task-delete-button
               hx-delete={`/tasks/${task.id}`}
               hx-target={`#task-${task.id}`}
-              hx-swap="outerHTML"
+              hx-swap="outerHTML swap:500ms"
               hx-confirm="Are you sure you want to delete this task?"
               variant="default"
+              _={`on htmx:afterRequest
+                  if (event.detail.successful) 
+                    then add @name=fadeOutLeft to closest <sl-animation />
+                    then add @play to closest <sl-animation />
+                  end
+                `}
             >
               <sl-icon name="trash"></sl-icon>
             </sl-button>
@@ -168,7 +174,13 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
               variant="default"
               hx-post={`/tasks/${task.id}/defer`}
               hx-target={`#task-${task.id}`}
-              hx-swap="outerHTML"
+              hx-swap="outerHTML swap:500ms"
+              _={`on htmx:afterRequest
+                  if (event.detail.successful) 
+                    then add @name=fadeOutLeft to closest <sl-animation />
+                    then add @play to closest <sl-animation />
+                  end
+                `}
             >
               <sl-icon name="clock"></sl-icon>
             </sl-button>
@@ -180,8 +192,14 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
               id={`task-${task.id}-complete`}
               hx-post={`/tasks/${task.id}/complete`}
               hx-target={`#task-${task.id}`}
-              hx-swap="outerHTML"
               variant="default"
+              hx-swap="outerHTML swap:500ms"
+              _={`on htmx:afterRequest
+                  if (event.detail.successful) 
+                    then add @name=fadeOutLeft to closest <sl-animation />
+                    then add @play to closest <sl-animation />
+                  end
+                `}
             >
               <sl-icon name="check2"></sl-icon>
             </sl-button>
