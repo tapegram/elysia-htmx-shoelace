@@ -16,22 +16,6 @@ Develop, test, run, and bundle JavaScript & TypeScript projects—all with Bun. 
 
 https://github.com/elysiajs/documentation/blob/main/docs/at-glance.md
 
----
-
-title: At glance - ElysiaJS
-head: - - meta - property: 'og:title'
-content: At glance - ElysiaJS
-
-    - - meta
-      - name: 'description'
-        content: Designed with ergonomic design, extensive support for TypeScript, modern JavaScript API, optimized for Bun. Offers a unique experience unified type, and end-to-end type safety while maintaining excellent performance.
-
-    - - meta
-      - property: 'og:description'
-        content: Designed with ergonomic design, extensive support for TypeScript, modern JavaScript API, optimized for Bun. Offers a unique experience unified type, and end-to-end type safety while maintaining excellent performance.
-
----
-
 <script setup>
 import Card from '../components/nearl/card.vue'
 import Deck from '../components/nearl/card-deck.vue'
