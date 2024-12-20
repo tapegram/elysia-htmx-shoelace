@@ -79,6 +79,9 @@ const NewTaskDialog = (): JSX.Element => {
                 then call me.reset()
               end
               on keyup if the event's key is 'Tab' halt the event end
+              on keyup if the event's key is 't' halt the event end
+              on keyup if the event's key is 'x' halt the event end
+              on keyup if the event's key is 'e' halt the event end
               on htmx:confirm
                 call my checkValidity()
                 if the result is false
@@ -166,7 +169,6 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
               hx-delete={`/tasks/${task.id}`}
               hx-target={`#task-${task.id}`}
               hx-swap="outerHTML swap:500ms"
-              hx-confirm="Are you sure you want to delete this task?"
               variant="default"
               _={`on htmx:afterRequest
                   if (event.detail.successful) 
