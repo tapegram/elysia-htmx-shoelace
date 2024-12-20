@@ -107,6 +107,7 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
         </div>
       </nav>
       <main class="m-8">
+        <div id="modal-target"></div>
         {children}
       </main>
     </body>

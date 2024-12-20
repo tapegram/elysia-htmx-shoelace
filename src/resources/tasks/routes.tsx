@@ -173,7 +173,14 @@ const TaskDetail = ({ task }: { task: Task }): JSX.Element => {
       id={`task-detail-dialog-${task.id}`}
       label="Task Detail"
       open
-      _="on keyup halt the event"
+      _="
+          on htmx:afterRequest
+            if (event.detail.successful) 
+              then remove me
+            end
+          end
+          on keyup halt the event end
+      "
     >
       <div class="task-detail">
         <h1>{task.summary}</h1>
@@ -183,6 +190,20 @@ const TaskDetail = ({ task }: { task: Task }): JSX.Element => {
           hx-target={`#task-${task.id}`}
           hx-swap="outerHTML"
           class="flex flex-col gap-4 items-center w-full"
+          _="
+            on htmx:confirm
+              call my checkValidity()
+              if the result is false
+                call my reportValidity()
+                halt the event
+            end
+            on keydown[(ctrlKey or metaKey) and key == 'Enter']
+              call my checkValidity()
+              if the result is true
+                trigger submit
+              otherwise
+                call my reportValidity()
+          "
         >
           <sl-input
             id="task-detail-summary-input"
@@ -227,8 +248,8 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
       id={`task-${task.id}`}
       class="w-full"
       hx-get={`/tasks/${task.id}`}
-      hx-target="this"
-      hx-swap="outerHTML"
+      hx-target="#modal-target"
+      hx-swap="innerHTML"
 
     >
       <div class="flex justify-between items-center w-full">
