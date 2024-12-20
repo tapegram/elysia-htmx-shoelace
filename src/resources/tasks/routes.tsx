@@ -16,17 +16,38 @@ export function addTasksRoutes(app: Elysia) {
     return ""
   });
 
+  app.get("/tasks/:id", async ({ params: { id } }) => {
+    const task = await tasksService.getTaskById(parseInt(id));
+    return <TaskDetail task={task} />
+  });
+
   app.delete("/tasks/:id", async ({ params: { id } }) => {
     await tasksService.delete(parseInt(id))
     // On delete, remove from the list, so return nothing
     return ""
   });
 
+  app.put("/tasks/:id", async ({ params: { id }, body }) => {
+    const updatedTask = await tasksService.updateTask(parseInt(id), {
+      summary: body.summary,
+      description: body.description,
+    });
+    return <TaskDetail task={updatedTask} />
+  },
+    {
+      body: t.Object({
+        summary: t.String(),
+        description: t.String()
+      }),
+    }
+  );
+
   app.post("/tasks/:id/defer", async ({ params: { id } }) => {
     await tasksService.defer(parseInt(id), 1)
     // On defer, remove for now, bring it back on the right date
     return ""
   });
+
 
   app.post("/tasks", async ({ body }) => {
     const newTask = await tasksService.create({
@@ -145,6 +166,52 @@ const TaskList = ({ tasks }: { tasks: Task[] }): JSX.Element => {
   );
 }
 
+const TaskDetail = ({ task }: { task: Task }): JSX.Element => {
+  return (
+    <sl-dialog
+      id={`task-detail-dialog-${task.id}`}
+      label="Task Detail"
+      open
+    >
+      <div class="task-detail">
+        <h1>{task.summary}</h1>
+        <p>{task.description}</p>
+        <form
+          hx-put={`/tasks/${task.id}`}
+          hx-target="this"
+          hx-swap="outerHTML"
+          class="flex flex-col gap-4 items-center w-full"
+        >
+          <sl-input
+            id="task-detail-summary-input"
+            required
+            size="small"
+            label="summary"
+            name="summary"
+            maxlength={50}
+            value={task.summary}
+            class="flex-grow w-full" />
+          <sl-textarea
+            id="task-detail-description-textarea"
+            label="description"
+            name="description"
+            value={task.description}
+            resize="none"
+            size="small"
+            class="w-full" />
+          <sl-button
+            id="task-detail-submit-button"
+            type="submit"
+            variant="primary"
+            class="ml-auto w-20">
+            Save
+          </sl-button>
+        </form>
+      </div>
+    </sl-dialog>
+  );
+}
+
 const TaskItem = ({ task }: { task: Task }): JSX.Element => {
 
   return <sl-animation name="pulse" duration="500" iterations="1" easing="easeOutCubic">
@@ -156,6 +223,9 @@ const TaskItem = ({ task }: { task: Task }): JSX.Element => {
             `}
       id={`task-${task.id}`}
       class="w-full"
+      hx-get={`/tasks/${task.id}`}
+      hx-target="this"
+      hx-swap="outerHTML"
 
     >
       <div class="flex justify-between items-center w-full">

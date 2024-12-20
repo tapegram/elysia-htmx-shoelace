@@ -1,5 +1,5 @@
 import { tasksTable } from "../../db/schema";
-import { eq, lte, and, lt } from 'drizzle-orm/expressions';
+import { eq, lte, and, } from 'drizzle-orm/expressions';
 
 import db, { TursoDB } from "../../db/connection";
 export type Task = typeof tasksTable.$inferSelect
@@ -12,7 +12,10 @@ interface TasksService {
   uncomplete(taskId: TaskId): Promise<Task>;
   delete(taskId: TaskId): Promise<void>;
   defer(taskId: TaskId, days: number): Promise<Task>;
+  getTaskById(taskId: TaskId): Promise<Task>;
+  updateTask(taskId: TaskId, { summary, description }: { summary: string, description: string }): Promise<Task>;
 }
+
 
 class TasksServiceImpl implements TasksService {
   private db;
@@ -24,6 +27,16 @@ class TasksServiceImpl implements TasksService {
   async getTodaysTasks(): Promise<Task[]> {
     const today = dateToday()
     return this.db.select().from(tasksTable).where(and(lte(tasksTable.dueDate, today), eq(tasksTable.completed, false))).all();
+  }
+
+  async getTaskById(taskId: TaskId): Promise<Task> {
+    const [task] = await this.db.select().from(tasksTable).where(eq(tasksTable.id, taskId)).all();
+    return task;
+  }
+
+  async updateTask(taskId: TaskId, { summary, description }: { summary: string, description: string }): Promise<Task> {
+    const [updatedTask] = await this.db.update(tasksTable).set({ summary, description }).where(eq(tasksTable.id, taskId)).returning().all();
+    return updatedTask;
   }
 
   async create({ summary, description }: { summary: string, description: string }): Promise<Task> {
