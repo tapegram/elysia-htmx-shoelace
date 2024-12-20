@@ -32,7 +32,7 @@ export function addTasksRoutes(app: Elysia) {
       summary: body.summary,
       description: body.description,
     });
-    return <TaskDetail task={updatedTask} />
+    return <TaskItem task={updatedTask} />
   },
     {
       body: t.Object({
@@ -88,6 +88,7 @@ const NewTaskDialog = (): JSX.Element => {
     <sl-dialog
       id="new-task-dialog"
       label="new task"
+      _="on keyup halt the event"
     >
       <div class="flex flex-col gap-4 items-center h-full w-full">
         <form
@@ -172,19 +173,21 @@ const TaskDetail = ({ task }: { task: Task }): JSX.Element => {
       id={`task-detail-dialog-${task.id}`}
       label="Task Detail"
       open
+      _="on keyup halt the event"
     >
       <div class="task-detail">
         <h1>{task.summary}</h1>
         <p>{task.description}</p>
         <form
           hx-put={`/tasks/${task.id}`}
-          hx-target="this"
+          hx-target={`#task-${task.id}`}
           hx-swap="outerHTML"
           class="flex flex-col gap-4 items-center w-full"
         >
           <sl-input
             id="task-detail-summary-input"
             required
+            autofocus
             size="small"
             label="summary"
             name="summary"
