@@ -83,6 +83,14 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
             then go to nextItem -500px smoothly
             then add @play to nextItem.parentElement
           end
+      
+          -- Open task detail modal on Enter key press
+          on keyup if the event's key is 'Enter'
+            then set currentItem to the first <sl-card.task-card--selected/>
+            then if currentItem is not null
+              then call currentItem.click()
+            end
+          end
 
       "
       class="p-8">
