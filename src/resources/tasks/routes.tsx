@@ -183,8 +183,6 @@ const TaskDetail = ({ task }: { task: Task }): JSX.Element => {
       "
     >
       <div class="task-detail">
-        <h1>{task.summary}</h1>
-        <p>{task.description}</p>
         <form
           hx-put={`/tasks/${task.id}`}
           hx-target={`#task-${task.id}`}
@@ -238,19 +236,25 @@ const TaskDetail = ({ task }: { task: Task }): JSX.Element => {
 
 const TaskItem = ({ task }: { task: Task }): JSX.Element => {
 
-  return <sl-animation name="pulse" duration="500" iterations="1" easing="easeOutCubic">
-    <sl-card
-      _={`
+  return <sl-animation
+    id={`task-${task.id}`}
+    name="pulse"
+    duration="500"
+    iterations="1"
+    easing="easeOutCubic"
+    _={`
             on keyup if the event's key is 'x' call #task-${task.id}-delete.click() end
             on keyup if the event's key is 't' call #task-${task.id}-defer.click() end
             on keyup if the event's key is 'e' call #task-${task.id}-complete.click() end
             `}
-      id={`task-${task.id}`}
+    hx-on="click"
+    hx-get={`/tasks/${task.id}`}
+    hx-target="#modal-target"
+    hx-swap="innerHTML"
+  >
+    <sl-card
       class="w-full"
-      hx-get={`/tasks/${task.id}`}
-      hx-target="#modal-target"
-      hx-swap="innerHTML"
-
+      _="on click halt the event"
     >
       <div class="flex justify-between items-center w-full">
         <p>{task.summary}</p>
