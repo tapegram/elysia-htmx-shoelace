@@ -8,6 +8,7 @@ import addRoutes from "./routes";
 import { htmx } from "@gtramontina.com/elysia-htmx";
 import { getEnv } from "./shared";
 import { logger } from "@grotto/logysia";
+import { authMiddleware } from "./middleware/auth";
 
 declare global {
   var ws: ElysiaWS<any, any, any>
@@ -18,15 +19,17 @@ export default function main() {
   const app = new Elysia()
 
   applyPlugins(app)
+  
+  // Add auth middleware
+  app.use(authMiddleware())
+  
   addRoutes(app)
 
   if (getEnv() === "development") {
-    // This will call app.listen
     enableLiveReload(app)
   } else {
     app.listen(3000)
   }
-
 }
 
 function applyPlugins(app: Elysia) {

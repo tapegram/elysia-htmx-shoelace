@@ -6,13 +6,13 @@ export type Task = typeof tasksTable.$inferSelect
 export type TaskId = Task["id"]
 
 interface TasksService {
-  getTodaysTasks(): Promise<Task[]>;
-  create({ summary, description }: { summary: string, description: string }): Promise<Task>;
+  getTodaysTasks(userId: number): Promise<Task[]>;
+  create({ summary, description, userId }: { summary: string, description: string, userId: number }): Promise<Task>;
   complete(taskId: TaskId): Promise<Task>;
   uncomplete(taskId: TaskId): Promise<Task>;
   delete(taskId: TaskId): Promise<void>;
   defer(taskId: TaskId, days: number): Promise<Task>;
-  getTaskById(taskId: TaskId): Promise<Task>;
+  getTaskById(taskId: TaskId, userId: number): Promise<Task>;
   updateTask(taskId: TaskId, { summary, description }: { summary: string, description: string }): Promise<Task>;
 }
 
@@ -24,13 +24,30 @@ class TasksServiceImpl implements TasksService {
     this.db = db;
   }
 
-  async getTodaysTasks(): Promise<Task[]> {
+  async getTodaysTasks(userId: number): Promise<Task[]> {
     const today = dateToday()
-    return this.db.select().from(tasksTable).where(and(lte(tasksTable.dueDate, today), eq(tasksTable.completed, false))).all();
+    return this.db.select()
+      .from(tasksTable)
+      .where(
+        and(
+          lte(tasksTable.dueDate, today),
+          eq(tasksTable.completed, false),
+          eq(tasksTable.userId, userId)
+        )
+      )
+      .all();
   }
 
-  async getTaskById(taskId: TaskId): Promise<Task> {
-    const [task] = await this.db.select().from(tasksTable).where(eq(tasksTable.id, taskId)).all();
+  async getTaskById(taskId: TaskId, userId: number): Promise<Task> {
+    const [task] = await this.db.select()
+      .from(tasksTable)
+      .where(
+        and(
+          eq(tasksTable.id, taskId),
+          eq(tasksTable.userId, userId)
+        )
+      )
+      .all();
     return task;
   }
 
@@ -39,12 +56,13 @@ class TasksServiceImpl implements TasksService {
     return updatedTask;
   }
 
-  async create({ summary, description }: { summary: string, description: string }): Promise<Task> {
+  async create({ summary, description, userId }: { summary: string, description: string, userId: number }): Promise<Task> {
     const task = {
       summary,
       description,
       completed: false,
-      dueDate: dateToday()
+      dueDate: dateToday(),
+      userId
     }
     const [createdTask] = await this.db.insert(tasksTable).values(task).returning().all();
     return createdTask;
