@@ -4,7 +4,7 @@ import { authMiddleware, AuthContext } from "./auth";
 export function requireAuth() {
   return new Elysia()
     .use(authMiddleware())
-    .derive((auth: AuthContext) => {
+    .derive(({ auth }) => {
       console.log("isAuthenticated", auth.isAuthenticated)
       if (!auth.isAuthenticated) {
         return Response.redirect("/auth/github");

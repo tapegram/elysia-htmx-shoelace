@@ -11,13 +11,13 @@ export interface AuthContext {
 export function authMiddleware() {
   return new Elysia()
     .use(cookie())
-    .derive(async ({ cookie }): Promise<AuthContext> => {
-      const sessionId = cookie.session;
+    .derive(async ({ cookie }) => {
+      const sessionId = cookie?.session;
       const user = sessionId ? await authService.getUserBySession(sessionId) : null;
-      
+
       return {
         user,
         isAuthenticated: !!user,
       };
     });
-} 
+}
