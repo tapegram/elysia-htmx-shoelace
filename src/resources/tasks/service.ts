@@ -2,12 +2,13 @@ import { tasksTable } from "../../db/schema";
 import { eq, lte, and, } from 'drizzle-orm/expressions';
 
 import db, { TursoDB } from "../../db/connection";
+import { UserId } from "../users/service";
 export type Task = typeof tasksTable.$inferSelect
 export type TaskId = Task["id"]
 
 interface TasksService {
-  getTodaysTasks(): Promise<Task[]>;
-  create({ summary, description }: { summary: string, description: string }): Promise<Task>;
+  getTodaysTasks({ userId }: { userId: UserId }): Promise<Task[]>;
+  create({ summary, description, userId }: { summary: string, description: string, userId: UserId }): Promise<Task>;
   complete(taskId: TaskId): Promise<Task>;
   uncomplete(taskId: TaskId): Promise<Task>;
   delete(taskId: TaskId): Promise<void>;
@@ -24,9 +25,9 @@ class TasksServiceImpl implements TasksService {
     this.db = db;
   }
 
-  async getTodaysTasks(): Promise<Task[]> {
+  async getTodaysTasks({ userId }: { userId: UserId }): Promise<Task[]> {
     const today = dateToday()
-    return this.db.select().from(tasksTable).where(and(lte(tasksTable.dueDate, today), eq(tasksTable.completed, false))).all();
+    return this.db.select().from(tasksTable).where(and(lte(tasksTable.dueDate, today), eq(tasksTable.completed, false), eq(tasksTable.userId, userId),)).all();
   }
 
   async getTaskById(taskId: TaskId): Promise<Task> {
@@ -39,12 +40,13 @@ class TasksServiceImpl implements TasksService {
     return updatedTask;
   }
 
-  async create({ summary, description }: { summary: string, description: string }): Promise<Task> {
+  async create({ userId, summary, description }: { userId: UserId, summary: string, description: string }): Promise<Task> {
     const task = {
       summary,
       description,
       completed: false,
-      dueDate: dateToday()
+      dueDate: dateToday(),
+      userId,
     }
     const [createdTask] = await this.db.insert(tasksTable).values(task).returning().all();
     return createdTask;

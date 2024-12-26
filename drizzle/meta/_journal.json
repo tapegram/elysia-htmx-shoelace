@@ -15,6 +15,13 @@
       "when": 1735235726666,
       "tag": "0001_normal_power_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1735236496128,
+      "tag": "0002_sad_butterfly",
+      "breakpoints": true
     }
   ]
 }

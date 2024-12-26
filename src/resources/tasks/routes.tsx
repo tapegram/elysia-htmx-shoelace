@@ -53,10 +53,13 @@ export function addTasksRoutes(app: Elysia) {
   });
 
 
-  app.post("/tasks", async ({ body }) => {
+  app.post("/tasks", async ({ session, cookie: { auth }, body }) => {
+    const userSession = await session.verify(auth.value)
+    console.log("userId", userSession)
     const newTask = await tasksService.create({
       summary: body.summary,
       description: body.description,
+      userId: userSession.id,
     })
 
     return <li class="my-10"><TaskItem task={newTask} /></li>
@@ -70,12 +73,15 @@ export function addTasksRoutes(app: Elysia) {
   );
 
 
-  app.get("/tasks", async (context: HtmxContext) => {
-    const tasks = await tasksService.getTodaysTasks();
+  app.get("/tasks", async ({ session, cookie: { auth }, hx }) => {
+
+    const userSession = await session.verify(auth.value)
+    console.log("userId", userSession)
+    const tasks = await tasksService.getTodaysTasks({ userId: userSession.id });
 
     return <Page
       env={getEnv()}
-      partial={context.hx.request}
+      partial={hx.request}
     >
       <span
         class="w-full"

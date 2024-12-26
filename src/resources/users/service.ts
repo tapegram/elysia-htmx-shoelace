@@ -2,6 +2,7 @@ import db from "../../db/connection";
 import { eq, } from 'drizzle-orm/expressions';
 import { usersTable } from "../../db/schema";
 
+export type UserId = User["id"]
 export type User = typeof usersTable.$inferSelect;
 
 interface UsersService {

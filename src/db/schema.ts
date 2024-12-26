@@ -6,6 +6,7 @@ export const tasksTable = sqliteTable("tasks", {
   completed: integer({ mode: "boolean" }).notNull().default(false),
   description: text(),
   dueDate: text().notNull(),
+  userId: integer().notNull().references(() => usersTable.id),
 }, () => []);
 
 export const usersTable = sqliteTable("users", {
