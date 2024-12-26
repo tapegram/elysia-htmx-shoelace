@@ -9,6 +9,7 @@ import { htmx } from "@gtramontina.com/elysia-htmx";
 import { getEnv } from "./shared";
 import { logger } from "@grotto/logysia";
 import { oauth2 } from "elysia-oauth2";
+import jwt from "@elysiajs/jwt";
 
 declare global {
   var ws: ElysiaWS<any, any, any>
@@ -17,6 +18,13 @@ declare global {
 
 export default function main() {
   const app = new Elysia()
+
+  app.use(
+    jwt({
+      name: 'boardsession',
+      secret: process.env.JWT_SECRET!,
+    })
+  )
 
   app.use(
     oauth2({
@@ -30,12 +38,31 @@ export default function main() {
     .get("/auth/github", async ({ oauth2 }) =>
       oauth2.redirect("GitHub", [])
     )
-    .get("/auth/github/callback", async ({ oauth2 }) => {
+    .get("/auth/github/callback", async ({ oauth2, boardsession, cookie: { auth } }) => {
       const token = await oauth2.authorize("GitHub");
-      console.log(token)
+      console.log(token);
 
-      // send request to API with token
+      console.log("before repsonse");
+      console.log(token.accessToken())
+      // Fetch user information from GitHub API
+      const response = await fetch("https://api.github.com/user", {
+        headers: {
+          'Authorization': `Bearer ${token.accessToken()}`,
+          'Accept': "application/vnd.github+json",
+          'X-GitHub-Api-Version': "2022-11-28",
+        },
+      });
+      console.log("response", response);
+
+      if (!response.ok) {
+        console.error("Failed to fetch user information from GitHub");
+        return;
+      }
+
+      const user = await response.json();
+      console.log("GitHub User ID:", user.id);
     })
+
 
 
   applyPlugins(app)
