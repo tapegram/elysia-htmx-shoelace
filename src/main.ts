@@ -2,7 +2,7 @@ import { html, } from "@elysiajs/html";
 import open from "open";
 import staticPlugin from "@elysiajs/static";
 import { tailwind } from "@gtramontina.com/elysia-tailwind";
-import { Elysia, ListenCallback } from "elysia";
+import { Elysia, ListenCallback, redirect } from "elysia";
 import { ElysiaWS } from "elysia/dist/ws";
 import addRoutes from "./routes";
 import { htmx } from "@gtramontina.com/elysia-htmx";
@@ -10,6 +10,7 @@ import { getEnv } from "./shared";
 import { logger } from "@grotto/logysia";
 import { oauth2 } from "elysia-oauth2";
 import jwt from "@elysiajs/jwt";
+import { usersService } from "./resources/users/service";
 
 declare global {
   var ws: ElysiaWS<any, any, any>
@@ -59,8 +60,20 @@ export default function main() {
         return;
       }
 
-      const user = await response.json();
-      console.log("GitHub User ID:", user.id);
+      const { id } = await response.json();
+      console.log("GitHub User ID:", id);
+
+      const user = await usersService.getOrCreateUser({ githubId: id });
+
+      console.log("User:", user);
+
+      auth.set({
+        value: await boardsession.sign({ id: user.id }),
+        httpOnly: true,
+        maxAge: 7 * 86400,
+      })
+
+      return redirect("/")
     })
 
 

@@ -8,3 +8,8 @@ export const tasksTable = sqliteTable("tasks", {
   dueDate: text().notNull(),
 }, () => []);
 
+export const usersTable = sqliteTable("users", {
+  id: integer().primaryKey({ autoIncrement: true }).notNull(),
+  githubId: integer().notNull(),
+}, () => []);
+
