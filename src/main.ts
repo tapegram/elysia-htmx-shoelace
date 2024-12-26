@@ -8,6 +8,7 @@ import addRoutes from "./routes";
 import { htmx } from "@gtramontina.com/elysia-htmx";
 import { getEnv } from "./shared";
 import { logger } from "@grotto/logysia";
+import { oauth2 } from "elysia-oauth2";
 
 declare global {
   var ws: ElysiaWS<any, any, any>
@@ -16,6 +17,26 @@ declare global {
 
 export default function main() {
   const app = new Elysia()
+
+  app.use(
+    oauth2({
+      GitHub: [
+        process.env.GITHUB_CLIENT_ID!,
+        process.env.GITHUB_CLIENT_SECRET!,
+        process.env.FRONTEND_URL! + "/auth/github/callback",
+      ]
+    })
+  )
+    .get("/auth/github", async ({ oauth2 }) =>
+      oauth2.redirect("GitHub", [])
+    )
+    .get("/auth/github/callback", async ({ oauth2 }) => {
+      const token = await oauth2.authorize("GitHub");
+      console.log(token)
+
+      // send request to API with token
+    })
+
 
   applyPlugins(app)
   addRoutes(app)
@@ -34,12 +55,12 @@ function applyPlugins(app: Elysia) {
   app.use(logger())
   app.use(staticPlugin())
   app.use(htmx())
-  app.use(tailwind({                           // 2. Use
-    path: "/public/css/style.css",       // 2.1 Where to serve the compiled stylesheet;
-    source: "./src/style.css",        // 2.2 Specify source file path (where your @tailwind directives are);
-    config: "./tailwind.config.js",       // 2.3 Specify config file path or Config object;
-    options: {                            // 2.4 Optionally Specify options:
-      autoprefixer: false               // 2.4.3 Whether to use autoprefixer;
+  app.use(tailwind({
+    path: "/public/css/style.css",
+    source: "./src/style.css",
+    config: "./tailwind.config.js",
+    options: {
+      autoprefixer: false
     },
   }))
 
