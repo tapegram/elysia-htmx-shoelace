@@ -1,4 +1,4 @@
-import Html, { html, } from "@elysiajs/html";
+import { Html, html } from "@elysiajs/html";
 import open from "open";
 import staticPlugin from "@elysiajs/static";
 import { tailwind } from "@gtramontina.com/elysia-tailwind";
@@ -40,7 +40,7 @@ export default function main() {
     }))
     .use(
       jwt({
-        name: 'session',
+        name: "session",
         secret: process.env.JWT_SECRET!,
       })
     )
@@ -167,7 +167,7 @@ export default function main() {
           class="w-full"
         >
           <NewTaskDialog />
-          < TaskList tasks={tasks} />
+          <TaskList tasks={tasks} />
         </span>
       </Page>
     })

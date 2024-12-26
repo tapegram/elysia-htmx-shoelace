@@ -1,4 +1,4 @@
-import { Html, } from "@elysiajs/html";
+import { Html } from "@elysiajs/html";
 import { Task } from "../service";
 import { TaskItem } from "./TaskItem";
 

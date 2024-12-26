@@ -1,4 +1,4 @@
-import { Html, } from "@elysiajs/html";
+import { Html } from "@elysiajs/html";
 import { Task } from "../service";
 
 export const TaskItem = ({ task }: { task: Task }): JSX.Element => {

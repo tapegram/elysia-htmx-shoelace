@@ -1,4 +1,4 @@
-import { Html, } from "@elysiajs/html";
+import { Html } from "@elysiajs/html";
 
 export const NewTaskDialog = (): JSX.Element => {
   return (
