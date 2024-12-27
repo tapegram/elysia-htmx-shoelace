@@ -188,11 +188,7 @@ const tasksController =
 const authController =
   new Elysia({ prefix: "/auth" })
     .get("/github", async ({ oauth2 }) => {
-      console.info("secrets!", [
-        process.env.GITHUB_CLIENT_ID!,
-        process.env.GITHUB_CLIENT_SECRET!,
-        process.env.FRONTEND_URL! + "/auth/github/callback",
-      ])
+      console.info("in auth/github")
       console.info("in auth/github")
       return oauth2.redirect("GitHub", [])
     })
