@@ -91,9 +91,10 @@ export default function main() {
       })
 
       console.info("after setting auth")
-      return redirect("/")
+      return redirect("/tasks")
     })
     .get('/', () => {
+      console.info("in /")
       return redirect("/tasks")
     })
     .get("/auth/github", ({ oauth2 }) => {
