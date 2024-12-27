@@ -143,94 +143,96 @@ function enableLiveReload(app: Elysia) {
 }
 
 const tasksController =
-  new Elysia({ prefix: "/tasks" })
-    .guard({
-      async beforeHandle({ session, cookie: { auth } }) {
-        console.log("in guard")
-        if (!auth) {
-          return redirect("/auth/github")
-        }
-        if (!session) {
-          return redirect("/auth/github")
-        }
-        const userSession = await session.verify(auth.value)
-        if (!userSession) {
-          return redirect("/auth/github")
-        }
-        console.log("after guard")
-      }
-    })
-    .post("/:id/complete", async ({ params: { id } }) => {
-      await tasksService.complete(parseInt(id))
-      // On complete, remove from the list, so return nothing
-      return ""
-    })
+  new Elysia()
+    .group("/tasks", (app) =>
+      app
+        .guard({
+          async beforeHandle({ session, cookie: { auth } }) {
+            console.log("in guard")
+            if (!auth) {
+              return redirect("/auth/github")
+            }
+            if (!session) {
+              return redirect("/auth/github")
+            }
+            const userSession = await session.verify(auth.value)
+            if (!userSession) {
+              return redirect("/auth/github")
+            }
+            console.log("after guard")
+          }
+        }, (app) =>
+          app.post("/:id/complete", async ({ params: { id } }) => {
+            await tasksService.complete(parseInt(id))
+            // On complete, remove from the list, so return nothing
+            return ""
+          })
 
-    .get("/:id", async ({ params: { id } }) => {
-      const task = await tasksService.getTaskById(parseInt(id));
-      return <TaskDetail task={task} />
-    })
+            .get("/:id", async ({ params: { id } }) => {
+              const task = await tasksService.getTaskById(parseInt(id));
+              return <TaskDetail task={task} />
+            })
 
-    .delete("/:id", async ({ params: { id } }) => {
-      await tasksService.delete(parseInt(id))
-      // On delete, remove from the list, so return nothing
-      return ""
-    })
+            .delete("/:id", async ({ params: { id } }) => {
+              await tasksService.delete(parseInt(id))
+              // On delete, remove from the list, so return nothing
+              return ""
+            })
 
-    .put("/:id", async ({ params: { id }, body }) => {
-      const updatedTask = await tasksService.updateTask(parseInt(id), {
-        summary: body.summary,
-        description: body.description,
-      });
-      return <TaskItem task={updatedTask} />
-    },
-      {
-        body: t.Object({
-          summary: t.String(),
-          description: t.String()
-        }),
-      }
+            .put("/:id", async ({ params: { id }, body }) => {
+              const updatedTask = await tasksService.updateTask(parseInt(id), {
+                summary: body.summary,
+                description: body.description,
+              });
+              return <TaskItem task={updatedTask} />
+            },
+              {
+                body: t.Object({
+                  summary: t.String(),
+                  description: t.String()
+                }),
+              }
+            )
+
+            .post("/:id/defer", async ({ params: { id } }) => {
+              await tasksService.defer(parseInt(id), 1)
+              // On defer, remove for now, bring it back on the right date
+              return ""
+            })
+
+            .post("/", async ({ session, cookie: { auth }, body }) => {
+              const userSession = await session.verify(auth.value)
+              const newTask = await tasksService.create({
+                summary: body.summary,
+                description: body.description,
+                userId: userSession.id,
+              })
+
+              return <li class="my-10" > <TaskItem task={newTask} /></li >
+            },
+              {
+                body: t.Object({
+                  summary: t.String(),
+                  description: t.String()
+                }),
+              }
+            )
+
+            .get("/", async ({ session, cookie: { auth }, hx }) => {
+
+              const userSession = await session.verify(auth.value)
+              const tasks = await tasksService.getTodaysTasks({ userId: userSession.id });
+
+              return <Page
+                env={getEnv()}
+                partial={hx.request}
+              >
+                <span
+                  class="w-full"
+                >
+                  <NewTaskDialog />
+                  <TaskList tasks={tasks} />
+                </span>
+              </Page>
+            }))
     )
-
-    .post("/:id/defer", async ({ params: { id } }) => {
-      await tasksService.defer(parseInt(id), 1)
-      // On defer, remove for now, bring it back on the right date
-      return ""
-    })
-
-    .post("/", async ({ session, cookie: { auth }, body }) => {
-      const userSession = await session.verify(auth.value)
-      const newTask = await tasksService.create({
-        summary: body.summary,
-        description: body.description,
-        userId: userSession.id,
-      })
-
-      return <li class="my-10" > <TaskItem task={newTask} /></li >
-    },
-      {
-        body: t.Object({
-          summary: t.String(),
-          description: t.String()
-        }),
-      }
-    )
-
-    .get("/", async ({ session, cookie: { auth }, hx }) => {
-
-      const userSession = await session.verify(auth.value)
-      const tasks = await tasksService.getTodaysTasks({ userId: userSession.id });
-
-      return <Page
-        env={getEnv()}
-        partial={hx.request}
-      >
-        <span
-          class="w-full"
-        >
-          <NewTaskDialog />
-          <TaskList tasks={tasks} />
-        </span>
-      </Page>
-    })
-
