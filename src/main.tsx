@@ -93,6 +93,7 @@ export default function main() {
       console.info("after setting auth")
       return redirect("/tasks")
     })
+    .use(tasksController)
     .get('/', () => {
       console.info("in /")
       return redirect("/tasks")
@@ -101,7 +102,6 @@ export default function main() {
       console.info("in auth/github")
       return oauth2.redirect("GitHub", [])
     })
-    .use(tasksController)
 
 
   if (getEnv() === "development") {
