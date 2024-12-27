@@ -2,6 +2,7 @@ import { Html } from "@elysiajs/html"
 import { Environment } from "../shared"
 
 export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX.Element, env: Environment, partial: boolean, }): JSX.Element => {
+  console.info("Rendering page")
   return partial ? <>{children}</> : (<html lang='en' >
     <head>
       <title>Hello World</title>

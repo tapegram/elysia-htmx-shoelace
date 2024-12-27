@@ -214,7 +214,7 @@ const tasksController =
             )
 
             .get("/", async ({ session, cookie: { auth }, hx }) => {
-
+              console.info("tasks")
               const userSession = await session.verify(auth.value)
               const tasks = await tasksService.getTodaysTasks({ userId: userSession.id });
               console.info("tasks", tasks)
