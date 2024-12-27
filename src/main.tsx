@@ -103,22 +103,6 @@ export default function main() {
       console.info("in auth/github")
       return oauth2.redirect("GitHub", [])
     })
-    .guard({
-      async beforeHandle({ session, cookie: { auth } }) {
-        console.log("in guard")
-        if (!auth) {
-          return redirect("/auth/github")
-        }
-        if (!session) {
-          return redirect("/auth/github")
-        }
-        const userSession = await session.verify(auth.value)
-        if (!userSession) {
-          return redirect("/auth/github")
-        }
-        console.log("after guard")
-      }
-    })
     .use(tasksController)
     .get('/', () => {
       return redirect("/tasks")
@@ -160,6 +144,22 @@ function enableLiveReload(app: Elysia) {
 
 const tasksController =
   new Elysia({ prefix: "/tasks" })
+    .guard({
+      async beforeHandle({ session, cookie: { auth } }) {
+        console.log("in guard")
+        if (!auth) {
+          return redirect("/auth/github")
+        }
+        if (!session) {
+          return redirect("/auth/github")
+        }
+        const userSession = await session.verify(auth.value)
+        if (!userSession) {
+          return redirect("/auth/github")
+        }
+        console.log("after guard")
+      }
+    })
     .post("/:id/complete", async ({ params: { id } }) => {
       await tasksService.complete(parseInt(id))
       // On complete, remove from the list, so return nothing
