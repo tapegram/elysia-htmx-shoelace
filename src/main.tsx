@@ -140,6 +140,8 @@ const tasksController =
         .guard({
           async beforeHandle({ session, cookie: { auth } }) {
             console.log("in guard")
+            console.log(auth)
+            console.log(session)
             if (!auth) {
               return redirect("/auth/github/start")
             }
@@ -147,6 +149,7 @@ const tasksController =
               return redirect("/auth/github/start")
             }
             const userSession = await session.verify(auth.value)
+            console.log(userSession)
             if (!userSession) {
               return redirect("/auth/github/start")
             }
