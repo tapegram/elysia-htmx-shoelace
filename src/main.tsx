@@ -80,7 +80,7 @@ export default function main() {
     // This will call app.listen
     enableLiveReload(app)
   } else {
-    app.listen(3000)
+    app.listen(process.env.PORT || 3000)
   }
 }
 
@@ -105,7 +105,8 @@ function enableLiveReload(app: Elysia) {
 
   }
 
-  app.listen(3000, callback)
+  const port = process.env.PORT || 3000
+  app.listen(port, callback)
 }
 
 const tasksController =
