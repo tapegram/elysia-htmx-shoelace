@@ -94,11 +94,7 @@ export default function main() {
       return redirect("/tasks")
     })
     .use(tasksController)
-    .get('/', () => {
-      console.info("in /")
-      return redirect("/tasks")
-    })
-    .get("/auth/github", ({ oauth2 }) => {
+    .get("/auth/github/start", ({ oauth2 }) => {
       console.info("in auth/github")
       return oauth2.redirect("GitHub", [])
     })
@@ -145,14 +141,14 @@ const tasksController =
           async beforeHandle({ session, cookie: { auth } }) {
             console.log("in guard")
             if (!auth) {
-              return redirect("/auth/github")
+              return redirect("/auth/github/start")
             }
             if (!session) {
-              return redirect("/auth/github")
+              return redirect("/auth/github/start")
             }
             const userSession = await session.verify(auth.value)
             if (!userSession) {
-              return redirect("/auth/github")
+              return redirect("/auth/github/start")
             }
             console.log("after guard")
           }
