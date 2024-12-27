@@ -56,20 +56,20 @@ export default function main() {
       })
     )
     .use(authController)
-    .guard({
-      async beforeHandle({ session, cookie: { auth } }) {
-        if (!auth) {
-          return redirect("/auth/github")
-        }
-        if (!session) {
-          return redirect("/auth/github")
-        }
-        const userSession = await session.verify(auth.value)
-        if (!userSession) {
-          return redirect("/auth/github")
-        }
-      }
-    })
+    // .guard({
+    //   async beforeHandle({ session, cookie: { auth } }) {
+    //     if (!auth) {
+    //       return redirect("/auth/github")
+    //     }
+    //     if (!session) {
+    //       return redirect("/auth/github")
+    //     }
+    //     const userSession = await session.verify(auth.value)
+    //     if (!userSession) {
+    //       return redirect("/auth/github")
+    //     }
+    //   }
+    // })
     .use(tasksController)
     .get('/', () => {
       return redirect("/tasks")
