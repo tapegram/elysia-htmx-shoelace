@@ -197,6 +197,9 @@ const authController =
     })
     .get("/github/callback", async ({ oauth2, session, cookie: { auth } }) => {
       console.info("in callback")
+      console.info("github client id", process.env.GITHUB_CLIENT_ID)
+      console.info("github secret", process.env.GITHUB_CLIENT_SECRET)
+      console.info("frontend url", process.env.FRONTEND_URL)
       const token = await oauth2.authorize("GitHub");
 
       // Fetch user information from GitHub API
