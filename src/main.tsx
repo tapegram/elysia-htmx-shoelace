@@ -55,21 +55,70 @@ export default function main() {
         ]
       })
     )
-    .use(authController)
-    // .guard({
-    //   async beforeHandle({ session, cookie: { auth } }) {
-    //     if (!auth) {
-    //       return redirect("/auth/github")
-    //     }
-    //     if (!session) {
-    //       return redirect("/auth/github")
-    //     }
-    //     const userSession = await session.verify(auth.value)
-    //     if (!userSession) {
-    //       return redirect("/auth/github")
-    //     }
-    //   }
-    // })
+    .get("/auth/github/callback", async ({ oauth2, session, cookie: { auth } }) => {
+      console.info("in callback")
+      const token = await oauth2.authorize("GitHub");
+
+      console.info("after fetching token", token)
+
+      // Fetch user information from GitHub API
+      const response = await fetch("https://api.github.com/user", {
+        headers: {
+          'Authorization': `Bearer ${token.accessToken()}`,
+          'Accept': "application/vnd.github+json",
+          'X-GitHub-Api-Version': "2022-11-28",
+        },
+      });
+
+      console.info("after fetching response", response)
+
+      if (!response.ok) {
+        console.error("Failed to fetch user information from GitHub");
+        return;
+      }
+
+      console.info("after checking ok")
+
+      const { id } = await response.json();
+      const user = await usersService.getOrCreateUser({ githubId: id });
+
+      console.info("after get/create user", user)
+
+      auth.set({
+        value: await session.sign({ id: user.id }),
+        httpOnly: true,
+        maxAge: 7 * 86400,
+      })
+
+      console.info("after setting auth")
+
+      return "wtf"
+      // return redirect("/")
+    })
+    .get("/auth/github", ({ oauth2 }) => {
+      console.info("in auth/github")
+      return oauth2.redirect("GitHub", [])
+    })
+    .get("/auth/github", ({ oauth2 }) => {
+      console.info("in auth/github")
+      return oauth2.redirect("GitHub", [])
+    })
+    .guard({
+      async beforeHandle({ session, cookie: { auth } }) {
+        console.log("in guard")
+        if (!auth) {
+          return redirect("/auth/github")
+        }
+        if (!session) {
+          return redirect("/auth/github")
+        }
+        const userSession = await session.verify(auth.value)
+        if (!userSession) {
+          return redirect("/auth/github")
+        }
+        console.log("after guard")
+      }
+    })
     .use(tasksController)
     .get('/', () => {
       return redirect("/tasks")
@@ -185,60 +234,3 @@ const tasksController =
       </Page>
     })
 
-const authController =
-  new Elysia({ prefix: "/auth" })
-    .get("/github", () => {
-      console.info("in auth/github")
-      // return await oauth2.redirect("GitHub", [])
-      return "github"
-    })
-    .get("/github/foo", () => {
-      console.info("in auth/github/foo")
-      // return await oauth2.redirect("GitHub", [])
-      return "github"
-    })
-    .get("/bar", () => {
-      console.info("in bar")
-      // return await oauth2.redirect("GitHub", [])
-      return "github"
-    })
-// .get("/github/callback", async ({ oauth2, session, cookie: { auth } }) => {
-//   console.info("in callback")
-// const token = await oauth2.authorize("GitHub");
-//
-// console.info("after fetching token", token)
-//
-// // Fetch user information from GitHub API
-// const response = await fetch("https://api.github.com/user", {
-//   headers: {
-//     'Authorization': `Bearer ${token.accessToken()}`,
-//     'Accept': "application/vnd.github+json",
-//     'X-GitHub-Api-Version': "2022-11-28",
-//   },
-// });
-//
-// console.info("after fetching response", response)
-//
-// if (!response.ok) {
-//   console.error("Failed to fetch user information from GitHub");
-//   return;
-// }
-//
-// console.info("after checking ok")
-//
-// const { id } = await response.json();
-// const user = await usersService.getOrCreateUser({ githubId: id });
-//
-// console.info("after get/create user", user)
-//
-// auth.set({
-//   value: await session.sign({ id: user.id }),
-//   httpOnly: true,
-//   maxAge: 7 * 86400,
-// })
-//
-// console.info("after setting auth")
-
-//   return "wtf"
-//   // return redirect("/")
-// })
