@@ -25,7 +25,7 @@ declare global {
 }
 
 export default function main() {
-  let app = new Elysia()
+  const app = new Elysia()
   app.use(html())
     .use(logger())
     .use(staticPlugin())
@@ -53,124 +53,12 @@ export default function main() {
         ]
       })
     )
-    //
-    // AUTH
-    // 
-    .get("/auth/github", async ({ oauth2 }) =>
-      oauth2.redirect("GitHub", [])
-    )
-    .get("/auth/github/callback", async ({ oauth2, session, cookie: { auth } }) => {
-      const token = await oauth2.authorize("GitHub");
-      // Fetch user information from GitHub API
-      const response = await fetch("https://api.github.com/user", {
-        headers: {
-          'Authorization': `Bearer ${token.accessToken()}`,
-          'Accept': "application/vnd.github+json",
-          'X-GitHub-Api-Version': "2022-11-28",
-        },
-      });
-
-      if (!response.ok) {
-        console.error("Failed to fetch user information from GitHub");
-        return;
-      }
-
-      const { id } = await response.json();
-      const user = await usersService.getOrCreateUser({ githubId: id });
-
-      auth.set({
-        value: await session.sign({ id: user.id }),
-        httpOnly: true,
-        maxAge: 7 * 86400,
-      })
-
-      return redirect("/")
-    })
-
-    // 
-    // TASKS
-    // 
+    .use(authController)
+    .use(tasksController)
     .get('/', () => {
       return redirect("/tasks")
     })
 
-    .post("/tasks/:id/complete", async ({ params: { id } }) => {
-      await tasksService.complete(parseInt(id))
-      // On complete, remove from the list, so return nothing
-      return ""
-    })
-
-    .get("/tasks/:id", async ({ params: { id } }) => {
-      const task = await tasksService.getTaskById(parseInt(id));
-      return <TaskDetail task={task} />
-    })
-
-    .delete("/tasks/:id", async ({ params: { id } }) => {
-      await tasksService.delete(parseInt(id))
-      // On delete, remove from the list, so return nothing
-      return ""
-    })
-
-    .put("/tasks/:id", async ({ params: { id }, body }) => {
-      const updatedTask = await tasksService.updateTask(parseInt(id), {
-        summary: body.summary,
-        description: body.description,
-      });
-      return <TaskItem task={updatedTask} />
-    },
-      {
-        body: t.Object({
-          summary: t.String(),
-          description: t.String()
-        }),
-      }
-    )
-
-    .post("/tasks/:id/defer", async ({ params: { id } }) => {
-      await tasksService.defer(parseInt(id), 1)
-      // On defer, remove for now, bring it back on the right date
-      return ""
-    })
-
-
-    .post("/tasks", async ({ session, cookie: { auth }, body }) => {
-      const userSession = await session.verify(auth.value)
-      console.log("userId", userSession)
-      const newTask = await tasksService.create({
-        summary: body.summary,
-        description: body.description,
-        userId: userSession.id,
-      })
-
-      return <li class="my-10" > <TaskItem task={newTask} /></li >
-    },
-      {
-        body: t.Object({
-          summary: t.String(),
-          description: t.String()
-        }),
-      }
-    )
-
-
-    .get("/tasks", async ({ session, cookie: { auth }, hx }) => {
-
-      const userSession = await session.verify(auth.value)
-      console.log("userId", userSession)
-      const tasks = await tasksService.getTodaysTasks({ userId: userSession.id });
-
-      return <Page
-        env={getEnv()}
-        partial={hx.request}
-      >
-        <span
-          class="w-full"
-        >
-          <NewTaskDialog />
-          <TaskList tasks={tasks} />
-        </span>
-      </Page>
-    })
 
   if (getEnv() === "development") {
     // This will call app.listen
@@ -204,3 +92,112 @@ function enableLiveReload(app: Elysia) {
   app.listen(3000, callback)
 }
 
+const tasksController =
+  new Elysia({ prefix: "/tasks" })
+    .post("/:id/complete", async ({ params: { id } }) => {
+      await tasksService.complete(parseInt(id))
+      // On complete, remove from the list, so return nothing
+      return ""
+    })
+
+    .get("/:id", async ({ params: { id } }) => {
+      const task = await tasksService.getTaskById(parseInt(id));
+      return <TaskDetail task={task} />
+    })
+
+    .delete("/:id", async ({ params: { id } }) => {
+      await tasksService.delete(parseInt(id))
+      // On delete, remove from the list, so return nothing
+      return ""
+    })
+
+    .put("/:id", async ({ params: { id }, body }) => {
+      const updatedTask = await tasksService.updateTask(parseInt(id), {
+        summary: body.summary,
+        description: body.description,
+      });
+      return <TaskItem task={updatedTask} />
+    },
+      {
+        body: t.Object({
+          summary: t.String(),
+          description: t.String()
+        }),
+      }
+    )
+
+    .post("/:id/defer", async ({ params: { id } }) => {
+      await tasksService.defer(parseInt(id), 1)
+      // On defer, remove for now, bring it back on the right date
+      return ""
+    })
+
+    .post("/", async ({ session, cookie: { auth }, body }) => {
+      const userSession = await session.verify(auth.value)
+      const newTask = await tasksService.create({
+        summary: body.summary,
+        description: body.description,
+        userId: userSession.id,
+      })
+
+      return <li class="my-10" > <TaskItem task={newTask} /></li >
+    },
+      {
+        body: t.Object({
+          summary: t.String(),
+          description: t.String()
+        }),
+      }
+    )
+
+    .get("/", async ({ session, cookie: { auth }, hx }) => {
+
+      const userSession = await session.verify(auth.value)
+      const tasks = await tasksService.getTodaysTasks({ userId: userSession.id });
+
+      return <Page
+        env={getEnv()}
+        partial={hx.request}
+      >
+        <span
+          class="w-full"
+        >
+          <NewTaskDialog />
+          <TaskList tasks={tasks} />
+        </span>
+      </Page>
+    })
+
+const authController =
+  new Elysia({ prefix: "/auth" })
+    .get("/github", async ({ oauth2 }) =>
+      oauth2.redirect("GitHub", [])
+    )
+    .get("/github/callback", async ({ oauth2, session, cookie: { auth } }) => {
+      const token = await oauth2.authorize("GitHub");
+
+      // Fetch user information from GitHub API
+      const response = await fetch("https://api.github.com/user", {
+        headers: {
+          'Authorization': `Bearer ${token.accessToken()}`,
+          'Accept': "application/vnd.github+json",
+          'X-GitHub-Api-Version': "2022-11-28",
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Failed to fetch user information from GitHub");
+        return;
+      }
+
+      const { id } = await response.json();
+      const user = await usersService.getOrCreateUser({ githubId: id });
+
+      auth.set({
+        value: await session.sign({ id: user.id }),
+        httpOnly: true,
+        maxAge: 7 * 86400,
+      })
+
+      return redirect("/")
+    })

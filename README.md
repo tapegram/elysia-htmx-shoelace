@@ -32,3 +32,24 @@ Applying changes: https://orm.drizzle.team/docs/get-started/turso-existing#step-
 ## Scripting with hyperscript
 
 https://hyperscript.org/img/hyperscript-cheatsheet.pdf
+
+## Todo
+
+https://github.com/elysiajs/elysia/issues/290
+// index.ts
+const app = new Elysia()
+.use(authController)
+.use(userController)
+
+// authController.ts
+export const authController = new Elysia({ prefix: "/auth" })
+.post("/login", ({}) => { ... })
+.post("/register", ({}) => { ... })
+
+// userController.ts
+export const userController = new Elysia({ prefix: "/user" })
+.get("", ({}) => { ... })
+.get("/:id", ({}) => { ... })
+
+separate back out in the elysia approved way.
+Then protect routes behind an auth check.
