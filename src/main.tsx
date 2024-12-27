@@ -55,6 +55,10 @@ export default function main() {
         ]
       })
     )
+    .get("/auth/github", ({ oauth2 }) => {
+      console.info("in auth/github")
+      return oauth2.redirect("GitHub", [])
+    })
     .get("/auth/github/callback", async ({ oauth2, session, cookie: { auth } }) => {
       console.info("in callback")
       const token = await oauth2.authorize("GitHub");
@@ -94,14 +98,6 @@ export default function main() {
 
       return "wtf"
       // return redirect("/")
-    })
-    .get("/auth/github", ({ oauth2 }) => {
-      console.info("in auth/github")
-      return oauth2.redirect("GitHub", [])
-    })
-    .get("/auth/github", ({ oauth2 }) => {
-      console.info("in auth/github")
-      return oauth2.redirect("GitHub", [])
     })
     .use(tasksController)
     .get('/', () => {
