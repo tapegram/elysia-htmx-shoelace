@@ -156,11 +156,12 @@ const tasksController =
             console.log("after guard")
           }
         }, (app) =>
-          app.post("/:id/complete", async ({ params: { id } }) => {
-            await tasksService.complete(parseInt(id))
-            // On complete, remove from the list, so return nothing
-            return ""
-          })
+          app.use(html())
+            .post("/:id/complete", async ({ params: { id } }) => {
+              await tasksService.complete(parseInt(id))
+              // On complete, remove from the list, so return nothing
+              return ""
+            })
 
             .get("/:id", async ({ params: { id } }) => {
               const task = await tasksService.getTaskById(parseInt(id));
