@@ -189,8 +189,7 @@ const authController =
   new Elysia({ prefix: "/auth" })
     .get("/github", async ({ oauth2 }) => {
       console.info("in auth/github")
-      console.info("in auth/github")
-      return oauth2.redirect("GitHub", [])
+      return await oauth2.redirect("GitHub", [])
     })
     .get("/github/callback", async ({ oauth2, session, cookie: { auth } }) => {
       console.info("in callback")
