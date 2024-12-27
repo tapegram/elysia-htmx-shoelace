@@ -193,6 +193,7 @@ const authController =
         process.env.GITHUB_CLIENT_SECRET!,
         process.env.FRONTEND_URL! + "/auth/github/callback",
       ])
+      console.info("in auth/github")
       return oauth2.redirect("GitHub", [])
     })
     .get("/github/callback", async ({ oauth2, session, cookie: { auth } }) => {
