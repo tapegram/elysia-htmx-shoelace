@@ -217,6 +217,7 @@ const tasksController =
 
               const userSession = await session.verify(auth.value)
               const tasks = await tasksService.getTodaysTasks({ userId: userSession.id });
+              console.info("tasks", tasks)
 
               return <Page
                 env={getEnv()}
