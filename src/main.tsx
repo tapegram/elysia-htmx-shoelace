@@ -2,13 +2,13 @@ import { Html, html } from "@elysiajs/html";
 import open from "open";
 import staticPlugin from "@elysiajs/static";
 import { tailwind } from "@gtramontina.com/elysia-tailwind";
-import { Elysia, ListenCallback, redirect, } from "elysia";
+import { Elysia, redirect, } from "elysia";
 import { ElysiaWS } from "elysia/dist/ws";
 import { htmx } from "@gtramontina.com/elysia-htmx";
 import { getEnv } from "./shared";
 import { logger } from "@grotto/logysia";
 import { oauth2 } from "elysia-oauth2";
-import jwt from "@elysiajs/jwt";
+import { jwt } from "@elysiajs/jwt";
 import { tasksService } from "./resources/tasks/service";
 
 import { t } from "elysia";
@@ -18,15 +18,23 @@ import { TaskItem } from "./resources/tasks/components/TaskItem";
 import { Page } from "./web/Page";
 import { NewTaskDialog } from "./resources/tasks/components/NewTaskDialog";
 import { TaskList } from "./resources/tasks/components/TaskList";
+import { ListenCallback } from "elysia/dist/universal/server";
 
 declare global {
-  var ws: ElysiaWS<any, any, any>
+  var ws: ElysiaWS<any, any>
   var isOpened: boolean
 }
 
 export default function main() {
   const app = new Elysia()
-  app.use(html())
+  app
+    .use(
+      jwt({
+        name: "session",
+        secret: process.env.JWT_SECRET!,
+      })
+    )
+    .use(html())
     .use(logger())
     .use(staticPlugin())
     .use(htmx())
@@ -39,12 +47,6 @@ export default function main() {
       },
     }))
     .use(
-      jwt({
-        name: "session",
-        secret: process.env.JWT_SECRET!,
-      })
-    )
-    .use(
       oauth2({
         GitHub: [
           process.env.GITHUB_CLIENT_ID!,
@@ -54,6 +56,20 @@ export default function main() {
       })
     )
     .use(authController)
+    .guard({
+      async beforeHandle({ session, cookie: { auth } }) {
+        if (!auth) {
+          return redirect("/auth/github")
+        }
+        if (!session) {
+          return redirect("/auth/github")
+        }
+        const userSession = await session.verify(auth.value)
+        if (!userSession) {
+          return redirect("/auth/github")
+        }
+      }
+    })
     .use(tasksController)
     .get('/', () => {
       return redirect("/tasks")
