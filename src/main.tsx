@@ -202,6 +202,8 @@ const authController =
       console.info("frontend url", process.env.FRONTEND_URL)
       const token = await oauth2.authorize("GitHub");
 
+      console.info("after fetching token", token)
+
       // Fetch user information from GitHub API
       const response = await fetch("https://api.github.com/user", {
         headers: {
@@ -211,19 +213,27 @@ const authController =
         },
       });
 
+      console.info("after fetching response", response)
+
       if (!response.ok) {
         console.error("Failed to fetch user information from GitHub");
         return;
       }
 
+      console.info("after checking ok")
+
       const { id } = await response.json();
       const user = await usersService.getOrCreateUser({ githubId: id });
+
+      console.info("after get/create user", user)
 
       auth.set({
         value: await session.sign({ id: user.id }),
         httpOnly: true,
         maxAge: 7 * 86400,
       })
+
+      console.info("after setting auth")
 
       return redirect("/")
     })
