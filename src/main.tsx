@@ -187,15 +187,16 @@ const tasksController =
 
 const authController =
   new Elysia({ prefix: "/auth" })
-    .get("/github", async ({ oauth2 }) => {
-      console.log("secrets!", [
+    .get("/github", async ({ log, oauth2 }) => {
+      log.info("secrets!", [
         process.env.GITHUB_CLIENT_ID!,
         process.env.GITHUB_CLIENT_SECRET!,
         process.env.FRONTEND_URL! + "/auth/github/callback",
       ])
       return oauth2.redirect("GitHub", [])
     })
-    .get("/github/callback", async ({ oauth2, session, cookie: { auth } }) => {
+    .get("/github/callback", async ({ log, oauth2, session, cookie: { auth } }) => {
+      log.info("in callback")
       const token = await oauth2.authorize("GitHub");
 
       // Fetch user information from GitHub API
@@ -208,7 +209,7 @@ const authController =
       });
 
       if (!response.ok) {
-        console.error("Failed to fetch user information from GitHub");
+        log.error("Failed to fetch user information from GitHub");
         return;
       }
 
