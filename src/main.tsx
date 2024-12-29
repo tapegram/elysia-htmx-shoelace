@@ -97,8 +97,6 @@ export default function main() {
       console.info("in auth/github")
       return oauth2.redirect("GitHub", [])
     })
-
-    .get("/foo", () => <p>foo</p>)
     .get("/bar", () => <p>bar</p>)
     .get("/", () => <p>hello</p>)
     .use(tasksController)
