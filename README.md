@@ -35,6 +35,5 @@ https://hyperscript.org/img/hyperscript-cheatsheet.pdf
 
 ## Todo
 
-- Create prod resources (github auth + turso)
+- deploy on render.com
 - Setup db migrations to run on deploys (part of a deploy script?)
-- deploy to prod on fly.io. follow tutorial on beth stack webpage
