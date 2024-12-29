@@ -36,7 +36,7 @@ export default function main() {
     )
     .use(html())
     .use(logger())
-    .use(staticPlugin())
+    .use(staticPlugin({ alwaysStatic: false }))
     .use(htmx())
     .use(tailwind({
       path: "/public/css/style.css",
