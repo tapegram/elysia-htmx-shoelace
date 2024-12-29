@@ -93,7 +93,7 @@ export default function main() {
       console.info("after setting auth")
       return redirect("/tasks")
     })
-    .get("/auth/github/start", ({ oauth2 }) => {
+    .get("/auth/github/start", async ({ oauth2 }) => {
       console.info("in auth/github")
       return oauth2.redirect("GitHub", [])
     })
