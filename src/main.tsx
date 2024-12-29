@@ -104,6 +104,7 @@ export default function main() {
 
   if (getEnv() === "development") {
     // This will call app.listen
+    console.info("Enabling live reload")
     enableLiveReload(app)
   } else {
     app.listen(process.env.PORT || 3000)
