@@ -20,7 +20,6 @@ export const TaskItem = ({ task }: { task: Task }): JSX.Element => {
   >
     <sl-card
       class="w-full"
-      _="on click halt the event"
     >
       <div class="flex justify-between items-center w-full">
         <p>{task.summary}</p>
