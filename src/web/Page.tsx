@@ -86,6 +86,7 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
           end
       
           -- Open task detail modal on Enter key press
+      
           on keyup if the event's key is 'Enter'
             then set currentItem to the first <sl-card.task-card--selected/>
             then if currentItem is not null

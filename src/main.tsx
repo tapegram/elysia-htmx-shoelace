@@ -90,21 +90,17 @@ export default function main() {
         maxAge: 7 * 86400,
       })
 
-      console.info("after setting auth")
       return redirect("/tasks")
     })
     .get("/auth/github/start", async ({ oauth2 }) => {
-      console.info("in auth/github")
       return oauth2.redirect("GitHub", [])
     })
-    .get("/bar", () => <p>bar</p>)
-    .get("/", () => <p>hello</p>)
+    .get("/", () => redirect("/tasks"))
     .use(tasksController)
 
 
   if (getEnv() === "development") {
     // This will call app.listen
-    console.info("Enabling live reload")
     enableLiveReload(app)
   } else {
     app.listen(process.env.PORT || 3000)
@@ -126,7 +122,6 @@ function enableLiveReload(app: Elysia) {
     }
 
     if (globalThis.ws) {
-      console.log("Reloading...")
       globalThis.ws.send('live-reload')
     }
 
@@ -142,9 +137,6 @@ const tasksController =
       app
         .guard({
           async beforeHandle({ session, cookie: { auth } }) {
-            console.log("in guard")
-            console.log(auth)
-            console.log(session)
             if (!auth) {
               return redirect("/auth/github/start")
             }
@@ -152,11 +144,9 @@ const tasksController =
               return redirect("/auth/github/start")
             }
             const userSession = await session.verify(auth.value)
-            console.log(userSession)
             if (!userSession) {
               return redirect("/auth/github/start")
             }
-            console.log("after guard")
           }
         }, (app) =>
           app.use(html())
@@ -217,10 +207,8 @@ const tasksController =
             )
 
             .get("/", async ({ session, cookie: { auth }, hx }) => {
-              console.info("tasks")
               const userSession = await session.verify(auth.value)
               const tasks = await tasksService.getTodaysTasks({ userId: userSession.id });
-              console.info("tasks", tasks)
 
               return <Page
                 env={getEnv()}
