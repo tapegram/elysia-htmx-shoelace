@@ -97,16 +97,16 @@ export const Page = ({ children, env, partial }: { children: JSX.Element[] | JSX
       "
       class="p-8">
       <nav class="navbar bg-gray-800 p-4">
-        <div class="container mx-auto flex justify-between items-center">
-          <a tabindex={-1} href="/" class="navbar-brand text-white text-xl">the board</a>
-          <ul class="navbar-nav flex space-x-4">
-            <li class="nav-item">
-              <sl-tooltip content="Create new task">
-                <sl-icon-button tabindex={-1} name="pencil" label="Create new task" class="nav-link text-white" _="on click call #new-task-dialog.show()"></sl-icon-button>
-              </sl-tooltip>
-            </li>
-          </ul>
-        </div>
+        <ul class="flex justify-between items-center navbar-nav space-x-4">
+          <li class="nav-item">
+            <a tabindex={-1} href="/" class="navbar-brand text-white text-xl">the board</a>
+          </li>
+          <li class="nav-item">
+            <sl-tooltip content="Create new task">
+              <sl-icon-button tabindex={-1} name="pencil" label="Create new task" class="nav-link text-white" _="on click call #new-task-dialog.show()"></sl-icon-button>
+            </sl-tooltip>
+          </li>
+        </ul>
       </nav>
       <main class="m-8">
         <div id="modal-target"></div>
